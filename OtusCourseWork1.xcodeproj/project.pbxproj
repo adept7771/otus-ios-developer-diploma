@@ -7,45 +7,43 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		944D67E52C550CEC00B2389E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D67E42C550CEC00B2389E /* MainViewController.swift */; };
+		944D67EB2C550D3000B2389E /* MainInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D67EA2C550D3000B2389E /* MainInteractor.swift */; };
+		944D67ED2C550D4000B2389E /* MainPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D67EC2C550D4000B2389E /* MainPresenter.swift */; };
+		944D67EF2C550D5000B2389E /* MainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D67EE2C550D5000B2389E /* MainRouter.swift */; };
+		944D67F12C550D6300B2389E /* MainConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D67F02C550D6300B2389E /* MainConfigurator.swift */; };
+		944D67F52C5514D100B2389E /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D67F42C5514D100B2389E /* SearchViewController.swift */; };
+		944D67F72C5514E100B2389E /* SearchInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D67F62C5514E100B2389E /* SearchInteractor.swift */; };
+		944D67F92C5514F800B2389E /* SearchPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D67F82C5514F800B2389E /* SearchPresenter.swift */; };
+		944D67FB2C55150700B2389E /* SearchRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D67FA2C55150700B2389E /* SearchRouter.swift */; };
+		944D67FD2C55151300B2389E /* SearchConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D67FC2C55151300B2389E /* SearchConfigurator.swift */; };
 		94FE4A062C54DE00002A1420 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A052C54DE00002A1420 /* AppDelegate.swift */; };
-		94FE4A0A2C54DE00002A1420 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A092C54DE00002A1420 /* ViewController.swift */; };
 		94FE4A0F2C54DE02002A1420 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94FE4A0E2C54DE02002A1420 /* Assets.xcassets */; };
 		94FE4A122C54DE02002A1420 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 94FE4A112C54DE02002A1420 /* Base */; };
 		94FE4A1F2C54F385002A1420 /* ApiHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A1E2C54F385002A1420 /* ApiHandler.swift */; };
 		94FE4A222C54F409002A1420 /* CatImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A212C54F409002A1420 /* CatImage.swift */; };
 		94FE4A242C54F422002A1420 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A232C54F422002A1420 /* NetworkError.swift */; };
-		94FE4A262C54F4BE002A1420 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A252C54F4BE002A1420 /* MainViewController.swift */; };
-		94FE4A282C54F4E3002A1420 /* MainViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A272C54F4E3002A1420 /* MainViewProtocol.swift */; };
-		94FE4A2F2C54F591002A1420 /* MainPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A2E2C54F591002A1420 /* MainPresenter.swift */; };
-		94FE4A312C54F5AD002A1420 /* MainPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A302C54F5AD002A1420 /* MainPresenterProtocol.swift */; };
-		94FE4A332C54F5C7002A1420 /* MainInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A322C54F5C7002A1420 /* MainInteractor.swift */; };
-		94FE4A352C54F5E7002A1420 /* MainInteractorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A342C54F5E7002A1420 /* MainInteractorProtocol.swift */; };
-		94FE4A382C54F631002A1420 /* MainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A372C54F631002A1420 /* MainRouter.swift */; };
-		94FE4A3A2C54F674002A1420 /* MainRouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A392C54F674002A1420 /* MainRouterProtocol.swift */; };
-		94FE4A3D2C55019B002A1420 /* MainConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A3C2C55019B002A1420 /* MainConfigurator.swift */; };
-		94FE4A3F2C5501BF002A1420 /* MainConfiguratorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A3E2C5501BF002A1420 /* MainConfiguratorProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		944D67E42C550CEC00B2389E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		944D67EA2C550D3000B2389E /* MainInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainInteractor.swift; sourceTree = "<group>"; };
+		944D67EC2C550D4000B2389E /* MainPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenter.swift; sourceTree = "<group>"; };
+		944D67EE2C550D5000B2389E /* MainRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRouter.swift; sourceTree = "<group>"; };
+		944D67F02C550D6300B2389E /* MainConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainConfigurator.swift; sourceTree = "<group>"; };
+		944D67F42C5514D100B2389E /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		944D67F62C5514E100B2389E /* SearchInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchInteractor.swift; sourceTree = "<group>"; };
+		944D67F82C5514F800B2389E /* SearchPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPresenter.swift; sourceTree = "<group>"; };
+		944D67FA2C55150700B2389E /* SearchRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRouter.swift; sourceTree = "<group>"; };
+		944D67FC2C55151300B2389E /* SearchConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConfigurator.swift; sourceTree = "<group>"; };
 		94FE4A022C54DE00002A1420 /* OtusCourseWork1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OtusCourseWork1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94FE4A052C54DE00002A1420 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		94FE4A092C54DE00002A1420 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		94FE4A0E2C54DE02002A1420 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		94FE4A112C54DE02002A1420 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		94FE4A132C54DE02002A1420 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		94FE4A1E2C54F385002A1420 /* ApiHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiHandler.swift; sourceTree = "<group>"; };
 		94FE4A212C54F409002A1420 /* CatImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatImage.swift; sourceTree = "<group>"; };
 		94FE4A232C54F422002A1420 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
-		94FE4A252C54F4BE002A1420 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		94FE4A272C54F4E3002A1420 /* MainViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewProtocol.swift; sourceTree = "<group>"; };
-		94FE4A2E2C54F591002A1420 /* MainPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenter.swift; sourceTree = "<group>"; };
-		94FE4A302C54F5AD002A1420 /* MainPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenterProtocol.swift; sourceTree = "<group>"; };
-		94FE4A322C54F5C7002A1420 /* MainInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainInteractor.swift; sourceTree = "<group>"; };
-		94FE4A342C54F5E7002A1420 /* MainInteractorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainInteractorProtocol.swift; sourceTree = "<group>"; };
-		94FE4A372C54F631002A1420 /* MainRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRouter.swift; sourceTree = "<group>"; };
-		94FE4A392C54F674002A1420 /* MainRouterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRouterProtocol.swift; sourceTree = "<group>"; };
-		94FE4A3C2C55019B002A1420 /* MainConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainConfigurator.swift; sourceTree = "<group>"; };
-		94FE4A3E2C5501BF002A1420 /* MainConfiguratorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainConfiguratorProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +57,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		944D67F22C55146400B2389E /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				944D67E42C550CEC00B2389E /* MainViewController.swift */,
+				944D67EA2C550D3000B2389E /* MainInteractor.swift */,
+				944D67EC2C550D4000B2389E /* MainPresenter.swift */,
+				944D67EE2C550D5000B2389E /* MainRouter.swift */,
+				944D67F02C550D6300B2389E /* MainConfigurator.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		944D67F32C55147500B2389E /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				944D67F42C5514D100B2389E /* SearchViewController.swift */,
+				944D67F62C5514E100B2389E /* SearchInteractor.swift */,
+				944D67F82C5514F800B2389E /* SearchPresenter.swift */,
+				944D67FA2C55150700B2389E /* SearchRouter.swift */,
+				944D67FC2C55151300B2389E /* SearchConfigurator.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
 		94FE49F92C54DE00002A1420 = {
 			isa = PBXGroup;
 			children = (
@@ -78,10 +100,9 @@
 		94FE4A042C54DE00002A1420 /* OtusCourseWork1 */ = {
 			isa = PBXGroup;
 			children = (
-				94FE4A1A2C54F15F002A1420 /* Screens */,
+				94FE4A1A2C54F15F002A1420 /* Modules */,
 				94FE4A1B2C54F170002A1420 /* Services */,
 				94FE4A052C54DE00002A1420 /* AppDelegate.swift */,
-				94FE4A092C54DE00002A1420 /* ViewController.swift */,
 				94FE4A0E2C54DE02002A1420 /* Assets.xcassets */,
 				94FE4A102C54DE02002A1420 /* LaunchScreen.storyboard */,
 				94FE4A132C54DE02002A1420 /* Info.plist */,
@@ -89,12 +110,13 @@
 			path = OtusCourseWork1;
 			sourceTree = "<group>";
 		};
-		94FE4A1A2C54F15F002A1420 /* Screens */ = {
+		94FE4A1A2C54F15F002A1420 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				94FE4A1C2C54F296002A1420 /* MainScreen */,
+				944D67F32C55147500B2389E /* Search */,
+				944D67F22C55146400B2389E /* Main */,
 			);
-			path = Screens;
+			path = Modules;
 			sourceTree = "<group>";
 		};
 		94FE4A1B2C54F170002A1420 /* Services */ = {
@@ -104,18 +126,6 @@
 				94FE4A1D2C54F33C002A1420 /* Network */,
 			);
 			path = Services;
-			sourceTree = "<group>";
-		};
-		94FE4A1C2C54F296002A1420 /* MainScreen */ = {
-			isa = PBXGroup;
-			children = (
-				94FE4A3B2C54F69E002A1420 /* Configurator */,
-				94FE4A2C2C54F572002A1420 /* Router */,
-				94FE4A2B2C54F56A002A1420 /* Interactor */,
-				94FE4A2A2C54F564002A1420 /* Presenter */,
-				94FE4A292C54F541002A1420 /* View */,
-			);
-			path = MainScreen;
 			sourceTree = "<group>";
 		};
 		94FE4A1D2C54F33C002A1420 /* Network */ = {
@@ -133,51 +143,6 @@
 				94FE4A232C54F422002A1420 /* NetworkError.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		94FE4A292C54F541002A1420 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				94FE4A252C54F4BE002A1420 /* MainViewController.swift */,
-				94FE4A272C54F4E3002A1420 /* MainViewProtocol.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		94FE4A2A2C54F564002A1420 /* Presenter */ = {
-			isa = PBXGroup;
-			children = (
-				94FE4A2E2C54F591002A1420 /* MainPresenter.swift */,
-				94FE4A302C54F5AD002A1420 /* MainPresenterProtocol.swift */,
-			);
-			path = Presenter;
-			sourceTree = "<group>";
-		};
-		94FE4A2B2C54F56A002A1420 /* Interactor */ = {
-			isa = PBXGroup;
-			children = (
-				94FE4A322C54F5C7002A1420 /* MainInteractor.swift */,
-				94FE4A342C54F5E7002A1420 /* MainInteractorProtocol.swift */,
-			);
-			path = Interactor;
-			sourceTree = "<group>";
-		};
-		94FE4A2C2C54F572002A1420 /* Router */ = {
-			isa = PBXGroup;
-			children = (
-				94FE4A372C54F631002A1420 /* MainRouter.swift */,
-				94FE4A392C54F674002A1420 /* MainRouterProtocol.swift */,
-			);
-			path = Router;
-			sourceTree = "<group>";
-		};
-		94FE4A3B2C54F69E002A1420 /* Configurator */ = {
-			isa = PBXGroup;
-			children = (
-				94FE4A3C2C55019B002A1420 /* MainConfigurator.swift */,
-				94FE4A3E2C5501BF002A1420 /* MainConfiguratorProtocol.swift */,
-			);
-			path = Configurator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,19 +216,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				94FE4A222C54F409002A1420 /* CatImage.swift in Sources */,
-				94FE4A3F2C5501BF002A1420 /* MainConfiguratorProtocol.swift in Sources */,
-				94FE4A3A2C54F674002A1420 /* MainRouterProtocol.swift in Sources */,
+				944D67FB2C55150700B2389E /* SearchRouter.swift in Sources */,
 				94FE4A1F2C54F385002A1420 /* ApiHandler.swift in Sources */,
-				94FE4A0A2C54DE00002A1420 /* ViewController.swift in Sources */,
-				94FE4A332C54F5C7002A1420 /* MainInteractor.swift in Sources */,
-				94FE4A312C54F5AD002A1420 /* MainPresenterProtocol.swift in Sources */,
-				94FE4A382C54F631002A1420 /* MainRouter.swift in Sources */,
-				94FE4A2F2C54F591002A1420 /* MainPresenter.swift in Sources */,
-				94FE4A262C54F4BE002A1420 /* MainViewController.swift in Sources */,
-				94FE4A282C54F4E3002A1420 /* MainViewProtocol.swift in Sources */,
+				944D67E52C550CEC00B2389E /* MainViewController.swift in Sources */,
+				944D67F12C550D6300B2389E /* MainConfigurator.swift in Sources */,
+				944D67ED2C550D4000B2389E /* MainPresenter.swift in Sources */,
+				944D67EB2C550D3000B2389E /* MainInteractor.swift in Sources */,
 				94FE4A062C54DE00002A1420 /* AppDelegate.swift in Sources */,
-				94FE4A3D2C55019B002A1420 /* MainConfigurator.swift in Sources */,
-				94FE4A352C54F5E7002A1420 /* MainInteractorProtocol.swift in Sources */,
+				944D67FD2C55151300B2389E /* SearchConfigurator.swift in Sources */,
+				944D67F72C5514E100B2389E /* SearchInteractor.swift in Sources */,
+				944D67F92C5514F800B2389E /* SearchPresenter.swift in Sources */,
+				944D67EF2C550D5000B2389E /* MainRouter.swift in Sources */,
+				944D67F52C5514D100B2389E /* SearchViewController.swift in Sources */,
 				94FE4A242C54F422002A1420 /* NetworkError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
