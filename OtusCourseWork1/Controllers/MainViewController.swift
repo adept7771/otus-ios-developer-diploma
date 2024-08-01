@@ -63,8 +63,11 @@ class MainViewController: UIViewController, LocationManagerDelegate, CommonCompo
 
     @objc private func handleLocationUpdated() {
         Task {
-            print("Location list:")
-            await print(ApiHandler.shared.fetchLocationList(for: currentLocationCity))
+            print("Location list from api:")
+            var locations = await ApiHandler.shared.fetchCityFromLocationsBase(for: currentLocationCity)
+            print(locations)
+            var filteredLocations = CityIdHelper.shared.compareLocations(location: locations)
+            print("\n Filtered Locations: \(filteredLocations) \n")
         }
     }
 

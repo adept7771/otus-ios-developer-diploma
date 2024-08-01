@@ -15,9 +15,7 @@ final class ApiHandler {
 
     private(set) var authToken: String?
 
-    private init() {
-        // No additional code needed here, we handle token fetching lazily
-    }
+    private init() { }
 
     private func ensureAuthToken() async -> Result<Void, NetworkError> {
         if let token = authToken, !token.isEmpty {
@@ -42,26 +40,20 @@ final class ApiHandler {
             var urlRequest = URLRequest(url: URL(string: endpointAddress)!)
 
             urlRequest.httpMethod = "POST"
-
-            // Set Content-Type header for multipart form data
             urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
 
-            // Create the form data
             let bodyString = "user=\(apiUser)&password=\(apiP)"
             urlRequest.httpBody = bodyString.data(using: .utf8)
 
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
 
-            // Check if the response is successful
             guard (response as? HTTPURLResponse)?.statusCode == 200 else {
                 print("Invalid response: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
                 return .failure(.networkError)
             }
 
-            // Decode the data into AuthResponse
             let authResponse = try decoder.decode(AuthResponse.self, from: data)
 
-            // Return the access token
             return .success(authResponse.accessToken)
 
         } catch {
@@ -82,7 +74,7 @@ final class ApiHandler {
     }
 
     @discardableResult
-    private func searchLocationCode(locationName: String) async -> Result<LocationList, NetworkError> {
+    private func searchCityInLocationsBase(locationName: String) async -> Result<LocationList, NetworkError> {
         let ensureTokenResult = await ensureAuthToken()
         
         guard case .success = ensureTokenResult else {
@@ -107,7 +99,6 @@ final class ApiHandler {
                 return .failure(.networkError)
             }
 
-            // Decode the data into AuthResponse
             let decodedResponse = try decoder.decode(LocationList.self, from: data)
             return .success(decodedResponse)
         } catch {
@@ -117,8 +108,8 @@ final class ApiHandler {
     }
 
     @discardableResult
-    func fetchLocationList(for locationName: String) async -> Result<[Location], NetworkError> {
-        let result = await searchLocationCode(locationName: locationName)
+    func fetchCityFromLocationsBase(for locationName: String) async -> Result<[Location], NetworkError> {
+        let result = await searchCityInLocationsBase(locationName: locationName)
 
         switch result {
         case .success(let locationList):

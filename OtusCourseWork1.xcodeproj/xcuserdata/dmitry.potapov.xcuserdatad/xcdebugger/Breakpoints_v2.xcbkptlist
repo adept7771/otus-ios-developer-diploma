@@ -14,9 +14,9 @@
             filePath = "OtusCourseWork1/Network/ApiHandler.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
-            landmarkName = "searchLocationCode(locationName:)"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
+            landmarkName = "searchCityInLocationsBase(locationName:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
