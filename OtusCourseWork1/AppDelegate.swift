@@ -1,27 +1,25 @@
 import UIKit
 
-@UIApplicationMain
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = configureTabBarController()
-        window?.makeKeyAndVisible()
-        return true
-    }
-
-    private func configureTabBarController() -> UITabBarController {
-        let mainViewController = MainConfigurator.configureModule()
-        let secondViewController = SearchConfigurator.configureModule()
-
-        mainViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .favorites, tag: 0)
-        secondViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 1)
 
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [mainViewController, secondViewController]
 
-        return tabBarController
+        let firstVC = MainViewController()
+        firstVC.tabBarItem = UITabBarItem(title: "Local", image: UIImage(systemName: "mappin.and.ellipse.circle.fill"), tag: 0)
+
+        let secondVC = SearchLocationViewController()
+        secondVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass.circle.fill"), tag: 1)
+
+        tabBarController.viewControllers = [firstVC, secondVC]
+
+        window?.rootViewController = tabBarController
+        window?.makeKeyAndVisible()
+
+        return true
     }
 }
