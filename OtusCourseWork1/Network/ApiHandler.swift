@@ -5,7 +5,7 @@ final class ApiHandler {
     static let shared = ApiHandler()
 
     private let baseUrl = "https://pfa.foreca.com/"
-    private var apiUrl: String { return baseUrl + "v1" }
+    private var apiUrl: String { return baseUrl + "api/v1" }
     private var authUrl: String { return baseUrl + "authorize" }
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
@@ -38,7 +38,7 @@ final class ApiHandler {
         do {
             let endpointAddress = "\(authUrl)/token?expire_hours=5"
 
-            print("Sending getAuthToken request to >>> \(endpointAddress)")
+            print("\n Sending getAuthToken request to >>> \(endpointAddress) \n")
             var urlRequest = URLRequest(url: URL(string: endpointAddress)!)
 
             urlRequest.httpMethod = "POST"
@@ -73,10 +73,10 @@ final class ApiHandler {
     private func fetchAuthToken() async -> Result<String, NetworkError> {
         switch await getAuthToken() {
         case .success(let token):
-            print("Access Token: \(token)")
+            print("\n Access Token: \(token) \n")
             return .success(token)
         case .failure(let error):
-            print("Failed to fetch token: \(error)")
+            print("\n Failed to fetch token: \(error) \n")
             return .failure(error)
         }
     }
@@ -92,7 +92,7 @@ final class ApiHandler {
         do {
             let endpointAddress = "\(apiUrl)/location/search/\(locationName)?lang=en"
 
-            print("Sending search Location Code request to >>> \(endpointAddress)")
+            print("\n Sending search Location Code request to >>> \(endpointAddress) \n")
             var urlRequest = URLRequest(url: URL(string: endpointAddress)!)
 
             urlRequest.httpMethod = "POST"
@@ -125,6 +125,7 @@ final class ApiHandler {
             return .success(locationList.locations)
 
         case .failure(let error):
+            print(error)
             return .failure(error)
         }
     }

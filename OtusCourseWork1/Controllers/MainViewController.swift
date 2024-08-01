@@ -34,6 +34,9 @@ class MainViewController: UIViewController, LocationManagerDelegate, CommonCompo
         locationManager.delegate = self
         locationManager.startUpdatingLocation()
 
+        // Subscribe to locationUpdated notification
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLocationUpdated), name: .locationUpdated, object: nil)
+
         // mainScreenView
         NSLayoutConstraint.activate([
             mainScreenView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -56,17 +59,11 @@ class MainViewController: UIViewController, LocationManagerDelegate, CommonCompo
             timeLabel.trailingAnchor.constraint(equalTo: mainScreenView.trailingAnchor, constant: -20),
             timeLabel.heightAnchor.constraint(equalToConstant: 40)
         ])
+    }
 
-//        if (ApiHandler.shared.authToken == ""){
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//                self.showAlert(
-//                    title: "Weather API Error",
-//                    message: "Can't get information from Foreca weather API data provider.")
-//            }
-//        }
-
+    @objc private func handleLocationUpdated() {
         Task {
-            print("")
+            print("Location list:")
             await print(ApiHandler.shared.fetchLocationList(for: currentLocationCity))
         }
     }
@@ -77,11 +74,21 @@ class MainViewController: UIViewController, LocationManagerDelegate, CommonCompo
         let locationNameComponents = locationName.components(separatedBy: ",")
 
         if locationNameComponents.count == 2 {
-
             currentLocationCity = locationNameComponents[0].trimmingCharacters(in: .whitespacesAndNewlines)
             currentLocationCountry = locationNameComponents[1].trimmingCharacters(in: .whitespacesAndNewlines)
+
+            // Send notification after updating the currentLocationCity
+            NotificationCenter.default.post(name: .locationUpdated, object: nil)
         } else {
             print("Invalid location string")
         }
     }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .locationUpdated, object: nil)
+    }
+}
+
+extension Notification.Name {
+    static let locationUpdated = Notification.Name("locationUpdated")
 }
