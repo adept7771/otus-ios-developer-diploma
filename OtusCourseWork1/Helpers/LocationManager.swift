@@ -10,6 +10,7 @@ import UIKit
 import CoreLocation
 
 class LocationManager: NSObject, CLLocationManagerDelegate {
+    
     private let locationManager = CLLocationManager()
     weak var delegate: LocationManagerDelegate?
 
@@ -36,7 +37,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
     private func getPlace(for location: CLLocation) {
         let geocoder = CLGeocoder()
-        geocoder.reverseGeocodeLocation(location) { placemarks, error in
+        let locale = Locale(identifier: "en_US") // Устанавливаем язык на английский
+        geocoder.reverseGeocodeLocation(location, preferredLocale: locale) { placemarks, error in
             if let error = error {
                 print("Failed to reverse geocode location: \(error.localizedDescription)")
                 return
@@ -58,3 +60,4 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 protocol LocationManagerDelegate: AnyObject {
     func didUpdateLocationName(_ locationName: String)
 }
+

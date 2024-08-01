@@ -52,15 +52,15 @@ class TimeManager {
 
         switch (hour, minute) {
         case (6..<12, _):
-            return "Утро"
+            return "Morning"
         case (12, 1..<60), (13..<18, _):
-            return "День"
+            return "Day"
         case (18, 1..<60), (19..<24, _):
-            return "Вечер"
+            return "Evening"
         case (0, 1..<60), (1..<6, _):
-            return "Ночь"
+            return "Night"
         default:
-            return "Утро"
+            return "Morning"
         }
     }
 }

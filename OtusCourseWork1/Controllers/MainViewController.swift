@@ -1,10 +1,13 @@
 import UIKit
 
-class MainViewController: UIViewController, LocationManagerDelegate {
-    let locationManager = LocationManager()
+class MainViewController: UIViewController, LocationManagerDelegate, CommonComponents {
+
+    lazy var locationManager = LocationManager()
 
     let locationLabel = UILabel()
     var timeLabel = UILabel()
+    var currentLocationCity = ""
+    var currentLocationCountry = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,21 +19,18 @@ class MainViewController: UIViewController, LocationManagerDelegate {
         mainScreenView.backgroundColor = .white
         view.addSubview(mainScreenView)
 
-        // Настройка locationLabel
         locationLabel.translatesAutoresizingMaskIntoConstraints = false
         locationLabel.textAlignment = .center
-        locationLabel.numberOfLines = 0 // Позволяет использовать любое количество строк
-        locationLabel.lineBreakMode = .byWordWrapping // Перенос по словам
+        locationLabel.numberOfLines = 0
+        locationLabel.lineBreakMode = .byWordWrapping
 
-        // Настройка timeLabel
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
         timeLabel.textAlignment = .center
-        timeLabel.text = "Сейчас: \(TimeManager.shared.getTimeOfDay())"
+        timeLabel.text = "Good \(TimeManager.shared.getTimeOfDay())!"
 
         mainScreenView.addSubview(locationLabel)
         mainScreenView.addSubview(timeLabel)
 
-        // Установка делегата и запуск обновления местоположения
         locationManager.delegate = self
         locationManager.startUpdatingLocation()
 
@@ -56,9 +56,32 @@ class MainViewController: UIViewController, LocationManagerDelegate {
             timeLabel.trailingAnchor.constraint(equalTo: mainScreenView.trailingAnchor, constant: -20),
             timeLabel.heightAnchor.constraint(equalToConstant: 40)
         ])
+
+//        if (ApiHandler.shared.authToken == ""){
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                self.showAlert(
+//                    title: "Weather API Error",
+//                    message: "Can't get information from Foreca weather API data provider.")
+//            }
+//        }
+
+        Task {
+            print("")
+            await print(ApiHandler.shared.fetchLocationList(for: currentLocationCity))
+        }
     }
 
     func didUpdateLocationName(_ locationName: String) {
         locationLabel.text = locationName
+
+        let locationNameComponents = locationName.components(separatedBy: ",")
+
+        if locationNameComponents.count == 2 {
+
+            currentLocationCity = locationNameComponents[0].trimmingCharacters(in: .whitespacesAndNewlines)
+            currentLocationCountry = locationNameComponents[1].trimmingCharacters(in: .whitespacesAndNewlines)
+        } else {
+            print("Invalid location string")
+        }
     }
 }
