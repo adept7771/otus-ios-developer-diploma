@@ -20,6 +20,7 @@
 		9458B9892C5BB9DA00A690A1 /* CityNameMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B9882C5BB9DA00A690A1 /* CityNameMapping.swift */; };
 		9458B98B2C5BBDF900A690A1 /* CommonComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B98A2C5BBDF900A690A1 /* CommonComponents.swift */; };
 		9458B98D2C5C0FAE00A690A1 /* CityIdHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B98C2C5C0FAE00A690A1 /* CityIdHelper.swift */; };
+		9458BA2B2C5CB42800A690A1 /* LocationConflictViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458BA2A2C5CB42800A690A1 /* LocationConflictViewController.swift */; };
 		94FE4A062C54DE00002A1420 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A052C54DE00002A1420 /* AppDelegate.swift */; };
 		94FE4A0F2C54DE02002A1420 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94FE4A0E2C54DE02002A1420 /* Assets.xcassets */; };
 		94FE4A122C54DE02002A1420 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 94FE4A112C54DE02002A1420 /* Base */; };
@@ -40,6 +41,7 @@
 		9458B9882C5BB9DA00A690A1 /* CityNameMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityNameMapping.swift; sourceTree = "<group>"; };
 		9458B98A2C5BBDF900A690A1 /* CommonComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonComponents.swift; sourceTree = "<group>"; };
 		9458B98C2C5C0FAE00A690A1 /* CityIdHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityIdHelper.swift; sourceTree = "<group>"; };
+		9458BA2A2C5CB42800A690A1 /* LocationConflictViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationConflictViewController.swift; sourceTree = "<group>"; };
 		94FE4A022C54DE00002A1420 /* OtusCourseWork1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OtusCourseWork1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94FE4A052C54DE00002A1420 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		94FE4A0E2C54DE02002A1420 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				944D681D2C5647CC00B2389E /* MainViewController.swift */,
 				9458B9742C5B8B1E00A690A1 /* SearchLocationViewController.swift */,
 				9458B98A2C5BBDF900A690A1 /* CommonComponents.swift */,
+				9458BA2A2C5CB42800A690A1 /* LocationConflictViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 				9458B9712C5B6F6B00A690A1 /* LocationManager.swift in Sources */,
 				9458B98B2C5BBDF900A690A1 /* CommonComponents.swift in Sources */,
 				9458B9822C5BA37800A690A1 /* WeeklyForecast.swift in Sources */,
+				9458BA2B2C5CB42800A690A1 /* LocationConflictViewController.swift in Sources */,
 				94FE4A1F2C54F385002A1420 /* ApiHandler.swift in Sources */,
 				9458B98D2C5C0FAE00A690A1 /* CityIdHelper.swift in Sources */,
 				9458B9772C5B9F7500A690A1 /* AuthResponse.swift in Sources */,

@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 protocol CommonComponents: UIViewController {
-//    func showUIAlert(title: String, message: String)
 }
 
 extension CommonComponents {

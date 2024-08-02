@@ -6,29 +6,34 @@
 //
 
 final class CityIdHelper {
-
     static let shared = CityIdHelper()
 
     private init() {}
 
-    func compareLocations(location: Result<[Location], NetworkError>) -> [Location] {
-        switch location {
-        case .success(let locations):
+    func compareLocations(result: Result<[Location], NetworkError>) -> [Location] {
+        switch result {
+        case .success(let incomingLocations):
             var filteredLocations = [Location]()
 
-            for location in locations {
-                let (mappedName, mappedCountry) = CityNameMapping.getCurrentNameAndCountry(for: location.name)
-                if location.name == mappedName && location.country == mappedCountry {
-                    filteredLocations.append(location)
+            for incomingLocation in incomingLocations {
+                
+                let incLocationName = incomingLocation.name
+                let incLocationCountry = incomingLocation.country
+
+                for (mappedOldCityName, (mappedNewCityName, mappedCountry)) in CityNameMapping.cityMappings {
+                    if incLocationName == mappedOldCityName && incLocationCountry == mappedCountry {
+                        filteredLocations.append(incomingLocation)
+                    }
                 }
             }
 
             return filteredLocations
 
         case .failure:
-            // Return an empty array if there is an error
+            print("\n WARNING! No locations filtered after comparing with mapping locations list! Zone undefied. \n")
             return []
         }
     }
 }
+
 

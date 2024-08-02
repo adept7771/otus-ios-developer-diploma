@@ -1,4 +1,5 @@
 import UIKit
+import Combine
 
 class MainViewController: UIViewController, LocationManagerDelegate, CommonComponents {
 
@@ -8,6 +9,7 @@ class MainViewController: UIViewController, LocationManagerDelegate, CommonCompo
     var timeLabel = UILabel()
     var currentLocationCity = ""
     var currentLocationCountry = ""
+    var filteredLocationsAfterMapping = [Location]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,13 +65,15 @@ class MainViewController: UIViewController, LocationManagerDelegate, CommonCompo
 
     @objc private func handleLocationUpdated() {
         Task {
-            print("Location list from api:")
-            var locations = await ApiHandler.shared.fetchCityFromLocationsBase(for: currentLocationCity)
-            print(locations)
-            var filteredLocations = CityIdHelper.shared.compareLocations(location: locations)
-            print("\n Filtered Locations: \(filteredLocations) \n")
+            print("Fetching location list from API...")
+            let locationsResult = await ApiHandler.shared.fetchCityFromLocationsBase(for: currentLocationCity)
+            print("Fetched locations: \(locationsResult)")
+
+            filteredLocationsAfterMapping = CityIdHelper.shared.compareLocations(result: locationsResult)
+            print("\nFiltered Locations: \(filteredLocationsAfterMapping)\n")
         }
     }
+
 
     func didUpdateLocationName(_ locationName: String) {
         locationLabel.text = locationName
