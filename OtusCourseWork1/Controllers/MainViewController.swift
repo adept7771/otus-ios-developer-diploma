@@ -11,8 +11,8 @@ import Combine
 class MainViewController: UIViewController, LocationDetectorDelegate, CommonComponents {
 
     lazy var locationDetector = LocationDetector()
-    let locationLabel = UILabel()
     var timeLabel = UILabel()
+    let locationLabel: UILabel = UILabel()
 
     var currentLocationCity = ""
     var currentLocationCountry = ""
@@ -125,16 +125,28 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
     private func showLocationConflictViewController() {
         let locationConflictVC = LocationConflictViewController(locations: filteredLocationsAfterMapping)
+        locationConflictVC.delegate = self // Устанавливаем делегата
 
         let navigationController = UINavigationController(rootViewController: locationConflictVC)
-        
         navigationController.modalPresentationStyle = .pageSheet
         navigationController.modalTransitionStyle = .coverVertical
-        
+
         present(navigationController, animated: true, completion: nil)
+    }
+
+
+    func updateLocation(_ location: Location) {
+        locationLabel.text = "\(location.name), \(location.country)"
+        print("test")
     }
 }
 
 extension Notification.Name {
     static let locationUpdated = Notification.Name("locationUpdated")
+}
+
+extension MainViewController: LocationConflictViewControllerDelegate {
+    func locationConflictViewController(_ controller: LocationConflictViewController, didSelectLocation location: Location) {
+        updateLocation(location)
+    }
 }
