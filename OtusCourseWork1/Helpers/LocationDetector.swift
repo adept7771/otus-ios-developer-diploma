@@ -9,10 +9,10 @@ import Foundation
 import UIKit
 import CoreLocation
 
-class LocationManager: NSObject, CLLocationManagerDelegate {
+class LocationDetector: NSObject, CLLocationManagerDelegate {
     
     private let locationManager = CLLocationManager()
-    weak var delegate: LocationManagerDelegate?
+    weak var delegate: LocationDetectorDelegate?
 
     override init() {
         super.init()
@@ -57,7 +57,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     }
 }
 
-protocol LocationManagerDelegate: AnyObject {
+protocol LocationDetectorDelegate: AnyObject {
     func didUpdateLocationName(_ locationName: String)
 }
 

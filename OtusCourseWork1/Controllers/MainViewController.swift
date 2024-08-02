@@ -1,20 +1,25 @@
+//
+//  LocationUndefinedViewController.swift
+//  OtusCourseWork1
+//
+//  Created by Dmitry Potapov on 02.08.2024.
+//
+
 import UIKit
 import Combine
 
-class MainViewController: UIViewController, LocationManagerDelegate, CommonComponents {
+class MainViewController: UIViewController, LocationDetectorDelegate, CommonComponents {
 
-    lazy var locationManager = LocationManager()
-
+    lazy var locationDetector = LocationDetector()
     let locationLabel = UILabel()
     var timeLabel = UILabel()
+
     var currentLocationCity = ""
     var currentLocationCountry = ""
+    var currentLocation: Location = Location()
 
-    var filteredLocationsAfterMapping = [Location]()
-
-//    // Observe updates
-//    @Published var filteredLocationsAfterMapping = [Location]()
-//    private var cancellables = Set<AnyCancellable>()
+    @Published var filteredLocationsAfterMapping = [Location]()
+    private var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,11 +43,13 @@ class MainViewController: UIViewController, LocationManagerDelegate, CommonCompo
         mainScreenView.addSubview(locationLabel)
         mainScreenView.addSubview(timeLabel)
 
-        locationManager.delegate = self
-        locationManager.startUpdatingLocation()
+        locationDetector.delegate = self
+        locationDetector.startUpdatingLocation()
 
         // Subscribe to locationUpdated notification
         NotificationCenter.default.addObserver(self, selector: #selector(handleLocationUpdated), name: .locationUpdated, object: nil)
+
+        setupSubscribers()
 
         // mainScreenView
         NSLayoutConstraint.activate([
@@ -84,7 +91,6 @@ class MainViewController: UIViewController, LocationManagerDelegate, CommonCompo
         }
     }
 
-
     func didUpdateLocationName(_ locationName: String) {
         locationLabel.text = locationName
 
@@ -105,21 +111,28 @@ class MainViewController: UIViewController, LocationManagerDelegate, CommonCompo
         NotificationCenter.default.removeObserver(self, name: .locationUpdated, object: nil)
     }
 
-//    private func setupSubscribers() {
-//        $filteredLocationsAfterMapping
-//            .sink { [weak self] locations in
-//                if locations.count > 1 {
-//                    self?.showLocationConflictViewController()
-//                }
-//            }
-//            .store(in: &cancellables)
-//    }
-//
-//    private func showLocationConflictViewController() {
-//        let vc = LocationConflictViewController()
-//        // Настройка и переход на LocationUndefinedViewController
-//        navigationController?.pushViewController(vc, animated: true)
-//    }
+    // Observing
+    private func setupSubscribers() {
+        $filteredLocationsAfterMapping
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] locations in
+                if locations.count > 1 {
+                    self?.showLocationConflictViewController()
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func showLocationConflictViewController() {
+        let locationConflictVC = LocationConflictViewController(locations: filteredLocationsAfterMapping)
+
+        let navigationController = UINavigationController(rootViewController: locationConflictVC)
+        
+        navigationController.modalPresentationStyle = .pageSheet
+        navigationController.modalTransitionStyle = .coverVertical
+        
+        present(navigationController, animated: true, completion: nil)
+    }
 }
 
 extension Notification.Name {

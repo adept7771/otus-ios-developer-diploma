@@ -10,12 +10,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let tabBarController = UITabBarController()
 
         let firstVC = MainViewController()
-        firstVC.tabBarItem = UITabBarItem(title: "Local", image: UIImage(systemName: "mappin.and.ellipse.circle.fill"), tag: 0)
+        let firstNavVC = UINavigationController(rootViewController: firstVC)
+        firstNavVC.tabBarItem = UITabBarItem(title: "Local", image: UIImage(systemName: "mappin.and.ellipse.circle.fill"), tag: 0)
 
         let secondVC = SearchLocationViewController()
-        secondVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass.circle.fill"), tag: 1)
+        let secondNavVC = UINavigationController(rootViewController: secondVC)
+        secondNavVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass.circle.fill"), tag: 1)
 
-        tabBarController.viewControllers = [firstVC, secondVC]
+        tabBarController.viewControllers = [firstNavVC, secondNavVC]
 
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()

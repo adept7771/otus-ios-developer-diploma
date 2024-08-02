@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		944D681E2C5647CC00B2389E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D681D2C5647CC00B2389E /* MainViewController.swift */; };
-		9458B9712C5B6F6B00A690A1 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B9702C5B6F6B00A690A1 /* LocationManager.swift */; };
+		9458B9712C5B6F6B00A690A1 /* LocationDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B9702C5B6F6B00A690A1 /* LocationDetector.swift */; };
 		9458B9732C5B726800A690A1 /* TimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B9722C5B726800A690A1 /* TimeManager.swift */; };
 		9458B9752C5B8B1E00A690A1 /* SearchLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B9742C5B8B1E00A690A1 /* SearchLocationViewController.swift */; };
 		9458B9772C5B9F7500A690A1 /* AuthResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B9762C5B9F7500A690A1 /* AuthResponse.swift */; };
@@ -29,7 +29,7 @@
 
 /* Begin PBXFileReference section */
 		944D681D2C5647CC00B2389E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		9458B9702C5B6F6B00A690A1 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		9458B9702C5B6F6B00A690A1 /* LocationDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetector.swift; sourceTree = "<group>"; };
 		9458B9722C5B726800A690A1 /* TimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeManager.swift; sourceTree = "<group>"; };
 		9458B9742C5B8B1E00A690A1 /* SearchLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLocationViewController.swift; sourceTree = "<group>"; };
 		9458B9762C5B9F7500A690A1 /* AuthResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthResponse.swift; sourceTree = "<group>"; };
@@ -85,7 +85,7 @@
 		9458B96F2C5B6F5400A690A1 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				9458B9702C5B6F6B00A690A1 /* LocationManager.swift */,
+				9458B9702C5B6F6B00A690A1 /* LocationDetector.swift */,
 				9458B9722C5B726800A690A1 /* TimeManager.swift */,
 				9458B98C2C5C0FAE00A690A1 /* CityIdHelper.swift */,
 			);
@@ -252,7 +252,7 @@
 				9458B9792C5BA1B400A690A1 /* Location.swift in Sources */,
 				9458B9802C5BA35E00A690A1 /* DailyForecast.swift in Sources */,
 				9458B97E2C5BA2EE00A690A1 /* LocationList.swift in Sources */,
-				9458B9712C5B6F6B00A690A1 /* LocationManager.swift in Sources */,
+				9458B9712C5B6F6B00A690A1 /* LocationDetector.swift in Sources */,
 				9458B98B2C5BBDF900A690A1 /* CommonComponents.swift in Sources */,
 				9458B9822C5BA37800A690A1 /* WeeklyForecast.swift in Sources */,
 				9458BA2B2C5CB42800A690A1 /* LocationConflictViewController.swift in Sources */,
