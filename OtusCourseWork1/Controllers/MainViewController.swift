@@ -9,7 +9,12 @@ class MainViewController: UIViewController, LocationManagerDelegate, CommonCompo
     var timeLabel = UILabel()
     var currentLocationCity = ""
     var currentLocationCountry = ""
+
     var filteredLocationsAfterMapping = [Location]()
+
+//    // Observe updates
+//    @Published var filteredLocationsAfterMapping = [Location]()
+//    private var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,11 +71,16 @@ class MainViewController: UIViewController, LocationManagerDelegate, CommonCompo
     @objc private func handleLocationUpdated() {
         Task {
             print("Fetching location list from API...")
-            let locationsResult = await ApiHandler.shared.fetchCityFromLocationsBase(for: currentLocationCity)
+            let locationsResult = await ApiHandler.shared.fetchCityFromForecaLocationsBase(for: self.currentLocationCity)
             print("Fetched locations: \(locationsResult)")
 
             filteredLocationsAfterMapping = CityIdHelper.shared.compareLocations(result: locationsResult)
             print("\nFiltered Locations: \(filteredLocationsAfterMapping)\n")
+
+            if(filteredLocationsAfterMapping.isEmpty){
+                filteredLocationsAfterMapping = ApiHandler.shared.extractLocations(from: locationsResult)
+                print("\nCopy all locations to filtered array because was conflicts with area detection. FilteredLocationsAfterMapping: \n\n \(filteredLocationsAfterMapping)\n")
+            }
         }
     }
 
@@ -94,6 +104,22 @@ class MainViewController: UIViewController, LocationManagerDelegate, CommonCompo
     deinit {
         NotificationCenter.default.removeObserver(self, name: .locationUpdated, object: nil)
     }
+
+//    private func setupSubscribers() {
+//        $filteredLocationsAfterMapping
+//            .sink { [weak self] locations in
+//                if locations.count > 1 {
+//                    self?.showLocationConflictViewController()
+//                }
+//            }
+//            .store(in: &cancellables)
+//    }
+//
+//    private func showLocationConflictViewController() {
+//        let vc = LocationConflictViewController()
+//        // Настройка и переход на LocationUndefinedViewController
+//        navigationController?.pushViewController(vc, animated: true)
+//    }
 }
 
 extension Notification.Name {

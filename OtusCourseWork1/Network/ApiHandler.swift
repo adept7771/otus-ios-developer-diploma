@@ -68,13 +68,13 @@ final class ApiHandler {
             print("\n Access Token: \(token) \n")
             return .success(token)
         case .failure(let error):
-            print("\n Failed to fetch token: \(error) \n")
+            print("\n Failed to fetch token (getAuthToken): \(error) \n")
             return .failure(error)
         }
     }
 
     @discardableResult
-    private func searchCityInLocationsBase(locationName: String) async -> Result<LocationList, NetworkError> {
+    private func searchCityInForecaLocationsBase(locationName: String) async -> Result<LocationList, NetworkError> {
         let ensureTokenResult = await ensureAuthToken()
         
         guard case .success = ensureTokenResult else {
@@ -102,22 +102,32 @@ final class ApiHandler {
             let decodedResponse = try decoder.decode(LocationList.self, from: data)
             return .success(decodedResponse)
         } catch {
-            print("Error: \(error)")
+            print("Error searchCityInForecaLocationsBase : \(error)")
             return .failure(.networkError)
         }
     }
 
     @discardableResult
-    func fetchCityFromLocationsBase(for locationName: String) async -> Result<[Location], NetworkError> {
-        let result = await searchCityInLocationsBase(locationName: locationName)
+    func fetchCityFromForecaLocationsBase(for locationName: String) async -> Result<[Location], NetworkError> {
+        let result = await searchCityInForecaLocationsBase(locationName: locationName)
 
         switch result {
         case .success(let locationList):
             return .success(locationList.locations)
 
         case .failure(let error):
-            print(error)
+            print("Can't fetchCityFromForecaLocationsBase form \(locationName) + \(error)")
             return .failure(error)
+        }
+    }
+
+    func extractLocations(from result: Result<[Location], NetworkError>) -> [Location] {
+        switch result {
+        case .success(let locations):
+            return locations
+        case .failure:
+            print("Can't extract locations from \(result)")
+            return []
         }
     }
 }

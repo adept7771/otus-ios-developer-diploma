@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class LocationConflictViewController: UIView {
+class LocationConflictViewController: UIViewController {
     
 }
 
