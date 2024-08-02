@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DailyForecast: Codable {
+struct WeeklySingleDay: Codable {
     var date: String
     var symbol: String
     var maxTemp: Int

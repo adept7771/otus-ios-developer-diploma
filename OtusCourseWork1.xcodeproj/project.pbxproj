@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		942653272C5CF70300F2D868 /* DetailedSingleDayForecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942653262C5CF70300F2D868 /* DetailedSingleDayForecast.swift */; };
 		944D681E2C5647CC00B2389E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D681D2C5647CC00B2389E /* MainViewController.swift */; };
 		9458B9712C5B6F6B00A690A1 /* LocationDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B9702C5B6F6B00A690A1 /* LocationDetector.swift */; };
 		9458B9732C5B726800A690A1 /* TimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B9722C5B726800A690A1 /* TimeManager.swift */; };
@@ -15,7 +16,7 @@
 		9458B9792C5BA1B400A690A1 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B9782C5BA1B400A690A1 /* Location.swift */; };
 		9458B97C2C5BA1D900A690A1 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B97B2C5BA1D900A690A1 /* NetworkError.swift */; };
 		9458B97E2C5BA2EE00A690A1 /* LocationList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B97D2C5BA2EE00A690A1 /* LocationList.swift */; };
-		9458B9802C5BA35E00A690A1 /* DailyForecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B97F2C5BA35E00A690A1 /* DailyForecast.swift */; };
+		9458B9802C5BA35E00A690A1 /* WeeklySingleDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B97F2C5BA35E00A690A1 /* WeeklySingleDay.swift */; };
 		9458B9822C5BA37800A690A1 /* WeeklyForecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B9812C5BA37800A690A1 /* WeeklyForecast.swift */; };
 		9458B9892C5BB9DA00A690A1 /* CityNameMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B9882C5BB9DA00A690A1 /* CityNameMapping.swift */; };
 		9458B98B2C5BBDF900A690A1 /* CommonComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458B98A2C5BBDF900A690A1 /* CommonComponents.swift */; };
@@ -24,10 +25,11 @@
 		94FE4A062C54DE00002A1420 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A052C54DE00002A1420 /* AppDelegate.swift */; };
 		94FE4A0F2C54DE02002A1420 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94FE4A0E2C54DE02002A1420 /* Assets.xcassets */; };
 		94FE4A122C54DE02002A1420 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 94FE4A112C54DE02002A1420 /* Base */; };
-		94FE4A1F2C54F385002A1420 /* ApiHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A1E2C54F385002A1420 /* ApiHandler.swift */; };
+		94FE4A1F2C54F385002A1420 /* ForecaApiHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A1E2C54F385002A1420 /* ForecaApiHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		942653262C5CF70300F2D868 /* DetailedSingleDayForecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedSingleDayForecast.swift; sourceTree = "<group>"; };
 		944D681D2C5647CC00B2389E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		9458B9702C5B6F6B00A690A1 /* LocationDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetector.swift; sourceTree = "<group>"; };
 		9458B9722C5B726800A690A1 /* TimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeManager.swift; sourceTree = "<group>"; };
@@ -36,7 +38,7 @@
 		9458B9782C5BA1B400A690A1 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		9458B97B2C5BA1D900A690A1 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		9458B97D2C5BA2EE00A690A1 /* LocationList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationList.swift; sourceTree = "<group>"; };
-		9458B97F2C5BA35E00A690A1 /* DailyForecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyForecast.swift; sourceTree = "<group>"; };
+		9458B97F2C5BA35E00A690A1 /* WeeklySingleDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklySingleDay.swift; sourceTree = "<group>"; };
 		9458B9812C5BA37800A690A1 /* WeeklyForecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyForecast.swift; sourceTree = "<group>"; };
 		9458B9882C5BB9DA00A690A1 /* CityNameMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityNameMapping.swift; sourceTree = "<group>"; };
 		9458B98A2C5BBDF900A690A1 /* CommonComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonComponents.swift; sourceTree = "<group>"; };
@@ -47,7 +49,7 @@
 		94FE4A0E2C54DE02002A1420 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		94FE4A112C54DE02002A1420 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		94FE4A132C54DE02002A1420 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		94FE4A1E2C54F385002A1420 /* ApiHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiHandler.swift; sourceTree = "<group>"; };
+		94FE4A1E2C54F385002A1420 /* ForecaApiHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecaApiHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,8 +132,9 @@
 		9458B9872C5BA3BA00A690A1 /* Forecast */ = {
 			isa = PBXGroup;
 			children = (
-				9458B97F2C5BA35E00A690A1 /* DailyForecast.swift */,
+				9458B97F2C5BA35E00A690A1 /* WeeklySingleDay.swift */,
 				9458B9812C5BA37800A690A1 /* WeeklyForecast.swift */,
+				942653262C5CF70300F2D868 /* DetailedSingleDayForecast.swift */,
 			);
 			path = Forecast;
 			sourceTree = "<group>";
@@ -170,7 +173,7 @@
 		94FE4A1D2C54F33C002A1420 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				94FE4A1E2C54F385002A1420 /* ApiHandler.swift */,
+				94FE4A1E2C54F385002A1420 /* ForecaApiHandler.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -250,13 +253,14 @@
 				944D681E2C5647CC00B2389E /* MainViewController.swift in Sources */,
 				9458B9732C5B726800A690A1 /* TimeManager.swift in Sources */,
 				9458B9792C5BA1B400A690A1 /* Location.swift in Sources */,
-				9458B9802C5BA35E00A690A1 /* DailyForecast.swift in Sources */,
+				9458B9802C5BA35E00A690A1 /* WeeklySingleDay.swift in Sources */,
 				9458B97E2C5BA2EE00A690A1 /* LocationList.swift in Sources */,
 				9458B9712C5B6F6B00A690A1 /* LocationDetector.swift in Sources */,
+				942653272C5CF70300F2D868 /* DetailedSingleDayForecast.swift in Sources */,
 				9458B98B2C5BBDF900A690A1 /* CommonComponents.swift in Sources */,
 				9458B9822C5BA37800A690A1 /* WeeklyForecast.swift in Sources */,
 				9458BA2B2C5CB42800A690A1 /* LocationConflictViewController.swift in Sources */,
-				94FE4A1F2C54F385002A1420 /* ApiHandler.swift in Sources */,
+				94FE4A1F2C54F385002A1420 /* ForecaApiHandler.swift in Sources */,
 				9458B98D2C5C0FAE00A690A1 /* CityIdHelper.swift in Sources */,
 				9458B9772C5B9F7500A690A1 /* AuthResponse.swift in Sources */,
 				94FE4A062C54DE00002A1420 /* AppDelegate.swift in Sources */,

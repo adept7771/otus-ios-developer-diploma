@@ -13,4 +13,6 @@ enum NetworkError: Error {
     case wrongJson
     case serverError
     case networkError
+    case invalidResponse
+    case decodingError
 }

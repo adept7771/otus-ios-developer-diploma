@@ -8,19 +8,19 @@
 import Foundation
 
 struct WeeklyForecast: Codable {
-    var forecast: [DailyForecast]
+    var forecast: [WeeklySingleDay]
 
     private enum CodingKeys: String, CodingKey {
         case forecast
     }
 
-    init(forecast: [DailyForecast] = []) {
+    init(forecast: [WeeklySingleDay] = []) {
         self.forecast = forecast
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        forecast = try container.decode([DailyForecast].self, forKey: .forecast)
+        forecast = try container.decode([WeeklySingleDay].self, forKey: .forecast)
     }
 
     func encode(to encoder: Encoder) throws {

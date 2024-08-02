@@ -1,8 +1,8 @@
 import Foundation
 
-final class ApiHandler {
+final class ForecaApiHandler {
 
-    static let shared = ApiHandler()
+    static let shared = ForecaApiHandler()
 
     private let baseUrl = "https://pfa.foreca.com/"
     private var apiUrl: String { return baseUrl + "api/v1" }
@@ -130,4 +130,41 @@ final class ApiHandler {
             return []
         }
     }
+
+    @discardableResult
+    func getDetailedSingleDayForecast(zoneId: String) async throws -> DetailedSingleDayForecast {
+        let ensureTokenResult = await ensureAuthToken()
+
+        guard case .success = ensureTokenResult else {
+            throw NetworkError.networkError
+        }
+
+        do {
+            let endpointAddress = "\(apiUrl)/current/\(zoneId)"
+            print("\n Sending getDetailedSingleDayForecast to >>> \(endpointAddress) \n")
+
+            var urlRequest = URLRequest(url: URL(string: endpointAddress)!)
+            urlRequest.httpMethod = "POST"
+            urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            urlRequest.setValue("Bearer \(authToken ?? "")", forHTTPHeaderField: "Authorization")
+
+            let (data, response) = try await URLSession.shared.data(for: urlRequest)
+
+            guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+                print("Invalid response: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
+                throw NetworkError.invalidResponse
+            }
+
+            let decodedResponse = try decoder.decode(DetailedSingleDayForecast.self, from: data)
+            return decodedResponse
+        } catch {
+            print("Error getDetailedSingleDayForecast : \(error)")
+            throw NetworkError.decodingError
+        }
+    }
+//
+//    @discardableResult
+//    func fetchDetailedSingleDayForecast() {
+//
+//    }
 }

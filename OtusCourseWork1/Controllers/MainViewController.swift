@@ -78,14 +78,14 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
     @objc private func handleLocationUpdated() {
         Task {
             print("Fetching location list from API...")
-            let locationsResult = await ApiHandler.shared.fetchCityFromForecaLocationsBase(for: self.currentLocationCity)
+            let locationsResult = await ForecaApiHandler.shared.fetchCityFromForecaLocationsBase(for: self.currentLocationCity)
             print("Fetched locations: \(locationsResult)")
 
             filteredLocationsAfterMapping = CityIdHelper.shared.compareLocations(result: locationsResult)
             print("\nFiltered Locations: \(filteredLocationsAfterMapping)\n")
 
             if(filteredLocationsAfterMapping.isEmpty){
-                filteredLocationsAfterMapping = ApiHandler.shared.extractLocations(from: locationsResult)
+                filteredLocationsAfterMapping = ForecaApiHandler.shared.extractLocations(from: locationsResult)
                 print("\nCopy all locations to filtered array because was conflicts with area detection. FilteredLocationsAfterMapping: \n\n \(filteredLocationsAfterMapping)\n")
             }
         }
