@@ -16,8 +16,15 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
     var currentLocationCity = ""
     var currentLocationCountry = ""
-    var currentLocation: Location = Location()
-
+    var currentLocation: Location = Location() {
+        didSet {
+            print("Current location was set to \(currentLocation)")
+            Task {
+                await print(ForecaApiHandler.shared.getDetailedSingleDayForecast(zoneId: currentLocation.id))
+            }
+        }
+    }
+    
     @Published var filteredLocationsAfterMapping = [Location]()
     private var cancellables = Set<AnyCancellable>()
 
@@ -137,7 +144,6 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
     func updateLocation(_ location: Location) {
         locationLabel.text = "\(location.name), \(location.country)"
-        print("test")
     }
 }
 
@@ -148,5 +154,6 @@ extension Notification.Name {
 extension MainViewController: LocationConflictViewControllerDelegate {
     func locationConflictViewController(_ controller: LocationConflictViewController, didSelectLocation location: Location) {
         updateLocation(location)
+        currentLocation = location
     }
 }

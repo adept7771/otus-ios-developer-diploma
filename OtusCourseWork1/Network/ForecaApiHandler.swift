@@ -76,7 +76,7 @@ final class ForecaApiHandler {
     @discardableResult
     private func searchCityInForecaLocationsBase(locationName: String) async -> Result<LocationList, NetworkError> {
         let ensureTokenResult = await ensureAuthToken()
-        
+
         guard case .success = ensureTokenResult else {
             return .failure(.networkError)
         }
@@ -132,11 +132,12 @@ final class ForecaApiHandler {
     }
 
     @discardableResult
-    func getDetailedSingleDayForecast(zoneId: String) async throws -> DetailedSingleDayForecast {
+    func getDetailedSingleDayForecast(zoneId: Int) async -> DetailedSingleDayForecast {
         let ensureTokenResult = await ensureAuthToken()
 
         guard case .success = ensureTokenResult else {
-            throw NetworkError.networkError
+            print("Error ensuring auth token")
+            return DetailedSingleDayForecast()
         }
 
         do {
@@ -152,19 +153,20 @@ final class ForecaApiHandler {
 
             guard (response as? HTTPURLResponse)?.statusCode == 200 else {
                 print("Invalid response: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
-                throw NetworkError.invalidResponse
+                return DetailedSingleDayForecast()
             }
 
             let decodedResponse = try decoder.decode(DetailedSingleDayForecast.self, from: data)
             return decodedResponse
         } catch {
-            print("Error getDetailedSingleDayForecast : \(error)")
-            throw NetworkError.decodingError
+            print("Error getDetailedSingleDayForecast: \(error)")
+            return DetailedSingleDayForecast()
         }
     }
-//
-//    @discardableResult
-//    func fetchDetailedSingleDayForecast() {
-//
-//    }
+
+    //
+    //    @discardableResult
+    //    func fetchDetailedSingleDayForecast() {
+    //
+    //    }
 }
