@@ -15,12 +15,13 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
     var currentLocationCity = ""
     var currentLocationCountry = ""
-    
+
     var currentLocation: Location = Location() {
         didSet {
             print("Current location was set to \(currentLocation)")
             Task {
-                await print(ForecaApiHandler.shared.getDetailedSingleDayForecast(zoneId: currentLocation.id))
+                detailedSingleDayForecast = await ForecaApiHandler.shared.getDetailedSingleDayForecast(zoneId: currentLocation.id)
+                print(detailedSingleDayForecast)
             }
         }
     }
@@ -37,9 +38,17 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
     var detailedSingleDayForecast: DetailedSingleDayForecast = DetailedSingleDayForecast() {
         didSet {
-            print("Current location was set to \(currentLocation)")
+            print("New forecast data: \(detailedSingleDayForecast) \n Presenting >>>>> \n")
+            updateWeatherLabels()
         }
     }
+
+    var temperatureLabel = UILabel(), feelsLikeTempLabel = UILabel(), precipProbLabel = UILabel(),
+    relHumidityLabel = UILabel(), dewPointLabel = UILabel(), windSpeedLabel = UILabel(),
+    windDirStringLabel = UILabel(), thunderProbLabel = UILabel(), cloudinessLabel = UILabel(),
+    uvIndexLabel = UILabel(), pressureLabel = UILabel()
+
+    // MARK: DidLoad -------------------------
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,6 +79,9 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         NotificationCenter.default.addObserver(self, selector: #selector(handleLocationUpdated), name: .locationUpdated, object: nil)
 
         // mainScreenView
+
+        
+
         NSLayoutConstraint.activate([
             mainScreenView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             mainScreenView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -91,7 +103,58 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
             timeLabel.trailingAnchor.constraint(equalTo: mainScreenView.trailingAnchor, constant: -20),
             timeLabel.heightAnchor.constraint(equalToConstant: 40)
         ])
+
+        // Add weather labels to main screen view
+        let weatherLabels = [temperatureLabel, feelsLikeTempLabel, relHumidityLabel, dewPointLabel,
+                             windSpeedLabel, windDirStringLabel, thunderProbLabel, cloudinessLabel,
+                             precipProbLabel, uvIndexLabel, pressureLabel]
+
+        for label in weatherLabels {
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.textAlignment = .left
+            mainScreenView.addSubview(label)
+        }
+
+        // Setup weather labels constraints
+        var previousLabel: UILabel = timeLabel
+        for label in weatherLabels {
+            NSLayoutConstraint.activate([
+                label.topAnchor.constraint(equalTo: previousLabel.bottomAnchor, constant: 10),
+                label.leadingAnchor.constraint(equalTo: mainScreenView.leadingAnchor, constant: 20),
+                label.trailingAnchor.constraint(equalTo: mainScreenView.trailingAnchor, constant: -20)
+            ])
+            previousLabel = label
+        }
     }
+
+    // MARK: UI Methods -------------------------
+
+    private func showLocationConflictViewController() {
+        let locationConflictVC = LocationConflictViewController(locations: filteredLocationsAfterMapping)
+        locationConflictVC.delegate = self // Устанавливаем делегата
+
+        let navigationController = UINavigationController(rootViewController: locationConflictVC)
+        navigationController.modalPresentationStyle = .pageSheet
+        navigationController.modalTransitionStyle = .coverVertical
+
+        present(navigationController, animated: true, completion: nil)
+    }
+
+    private func updateWeatherLabels() {
+        temperatureLabel.text = "Temperature: \(detailedSingleDayForecast.current.temperature)"
+        feelsLikeTempLabel.text = "Feels Like Temp: \(detailedSingleDayForecast.current.feelsLikeTemp)"
+        relHumidityLabel.text = "Relative Humidity: \(detailedSingleDayForecast.current.relHumidity)"
+        dewPointLabel.text = "Dew Point: \(detailedSingleDayForecast.current.dewPoint)"
+        windSpeedLabel.text = "Wind Speed: \(detailedSingleDayForecast.current.windSpeed)"
+        windDirStringLabel.text = "Wind Direction: \(detailedSingleDayForecast.current.windDirString)"
+        thunderProbLabel.text = "Thunder Probability: \(detailedSingleDayForecast.current.thunderProb)"
+        cloudinessLabel.text = "Cloudiness: \(detailedSingleDayForecast.current.cloudiness)"
+        precipProbLabel.text = "Precipitation Probability: \(detailedSingleDayForecast.current.precipProb)"
+        uvIndexLabel.text = "UV Index: \(detailedSingleDayForecast.current.uvIndex)"
+        pressureLabel.text = "Pressure: \(detailedSingleDayForecast.current.pressure)"
+    }
+
+    // MARK: Handler Methods -------------------------
 
     @objc private func handleLocationUpdated() {
         Task {
@@ -129,16 +192,6 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         NotificationCenter.default.removeObserver(self, name: .locationUpdated, object: nil)
     }
 
-    private func showLocationConflictViewController() {
-        let locationConflictVC = LocationConflictViewController(locations: filteredLocationsAfterMapping)
-        locationConflictVC.delegate = self // Устанавливаем делегата
-
-        let navigationController = UINavigationController(rootViewController: locationConflictVC)
-        navigationController.modalPresentationStyle = .pageSheet
-        navigationController.modalTransitionStyle = .coverVertical
-
-        present(navigationController, animated: true, completion: nil)
-    }
 
     func updateLocation(_ location: Location) {
         locationLabel.text = "\(location.name), \(location.country)"
