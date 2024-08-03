@@ -89,17 +89,32 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         timeLabel.addAndActivateConstraints(to: [.top(-5, relativeTo: locationLabel.bottomAnchor), .leading(20), .trailing(-20), .height(40)],
                                             of: mainScreenView)
 
-        // Add weather labels to main screen view
+
+        addWeatherLabelsForCurrentDayForecastToMainScreen(mainScreenView: mainScreenView)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .locationUpdated, object: nil)
+    }
+}
+
+extension MainViewController {
+
+    // MARK: UI Methods -------------------------
+
+    private func addWeatherLabelsForCurrentDayForecastToMainScreen(mainScreenView: UIView) {
         let weatherLabels = [temperatureLabel, feelsLikeTempLabel, relHumidityLabel, dewPointLabel,
                              windSpeedLabel, windDirStringLabel, thunderProbLabel, cloudinessLabel,
                              precipProbLabel, uvIndexLabel, pressureLabel]
 
+        // Добавление всех лейблов на mainScreenView
         for label in weatherLabels {
             label.translatesAutoresizingMaskIntoConstraints = false
             label.textAlignment = .left
             mainScreenView.addSubview(label)
         }
 
+        // Установка констрейнтов
         var previousLabel: UILabel = timeLabel
         for (index, label) in weatherLabels.enumerated() {
             if index == 0 {
@@ -112,7 +127,6 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
                     of: mainScreenView
                 )
             } else {
-                // Последующие элементы устанавливаются относительно предыдущего label
                 label.addAndActivateConstraints(
                     to: [
                         .top(10, relativeTo: previousLabel.bottomAnchor),
@@ -126,14 +140,6 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         }
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .locationUpdated, object: nil)
-    }
-}
-
-extension MainViewController {
-
-    // MARK: UI Methods -------------------------
 
     private func showLocationConflictViewController() {
         let locationConflictVC = LocationConflictViewController(locations: filteredLocationsAfterMapping)
