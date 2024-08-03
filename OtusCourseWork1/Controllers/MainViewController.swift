@@ -126,6 +126,13 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         }
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .locationUpdated, object: nil)
+    }
+}
+
+extension MainViewController {
+
     // MARK: UI Methods -------------------------
 
     private func showLocationConflictViewController() {
@@ -152,6 +159,9 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         uvIndexLabel.text = "UV Index: \(detailedSingleDayForecast.current.uvIndex)"
         pressureLabel.text = "Pressure: \(detailedSingleDayForecast.current.pressure)"
     }
+}
+
+extension MainViewController {
 
     // MARK: Handler Methods -------------------------
 
@@ -187,9 +197,7 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         }
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .locationUpdated, object: nil)
-    }
+
 
 
     func updateLocation(_ location: Location) {
