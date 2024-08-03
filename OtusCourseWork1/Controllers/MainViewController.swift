@@ -62,27 +62,17 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         view.addSubview(mainScreenView)
         mainScreenView.addAndActivateConstraints(to: [.safeAreaTop(0), .safeAreaBottom(0), .leading(0), .trailing(0)], of: view)
 
-        locationLabel.translatesAutoresizingMaskIntoConstraints = false
-        locationLabel.textAlignment = .center
-        locationLabel.numberOfLines = 0
-        locationLabel.lineBreakMode = .byWordWrapping
-        mainScreenView.addSubview(locationLabel)
-        locationLabel.addAndActivateConstraints(to: [.top(15), .leading(20), .trailing(-20)], of: mainScreenView)
-        locationLabel.addAndActivateConstraints(to: [.top(15, relativeTo: mainScreenView.topAnchor), .leading(20), .trailing(-20)], of: mainScreenView)
+        showLocationLabel(mainScreenView: mainScreenView)
+        showTimeLabel(mainScreenView: mainScreenView)
 
-        timeLabel.translatesAutoresizingMaskIntoConstraints = false
-        timeLabel.textAlignment = .center
-        timeLabel.text = "Good \(TimeManager.shared.getTimeOfDay())!"
-        mainScreenView.addSubview(timeLabel)
-        timeLabel.addAndActivateConstraints(to: [.top(-5, relativeTo: locationLabel.bottomAnchor), .leading(20), .trailing(-20), .height(40)],
-                                            of: mainScreenView)
-
+        // Delegates
         locationDetector.delegate = self
         locationDetector.startUpdatingLocation()
 
         // Subscribe to locationUpdated notification
         NotificationCenter.default.addObserver(self, selector: #selector(handleLocationUpdated), name: .locationUpdated, object: nil)
-
+        
+        // CurrentDayForecast show if data received
         addWeatherLabelsForCurrentDayForecastToMainScreen(mainScreenView: mainScreenView)
     }
 
@@ -91,9 +81,27 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
     }
 }
 
+// MARK: UI Methods -------------------------
 extension MainViewController {
 
-    // MARK: UI Methods -------------------------
+    private func showTimeLabel(mainScreenView: UIView){
+        timeLabel.translatesAutoresizingMaskIntoConstraints = false
+        timeLabel.textAlignment = .center
+        timeLabel.text = "Good \(TimeManager.shared.getTimeOfDay())!"
+        mainScreenView.addSubview(timeLabel)
+        timeLabel.addAndActivateConstraints(to: [.top(-5, relativeTo: locationLabel.bottomAnchor), .leading(20), .trailing(-20), .height(40)],
+                                            of: mainScreenView)
+    }
+
+    private func showLocationLabel(mainScreenView: UIView){
+        locationLabel.translatesAutoresizingMaskIntoConstraints = false
+        locationLabel.textAlignment = .center
+        locationLabel.numberOfLines = 0
+        locationLabel.lineBreakMode = .byWordWrapping
+        mainScreenView.addSubview(locationLabel)
+        locationLabel.addAndActivateConstraints(to: [.top(15), .leading(20), .trailing(-20)], of: mainScreenView)
+        locationLabel.addAndActivateConstraints(to: [.top(15, relativeTo: mainScreenView.topAnchor), .leading(20), .trailing(-20)], of: mainScreenView)
+    }
 
     private func addWeatherLabelsForCurrentDayForecastToMainScreen(mainScreenView: UIView) {
         let weatherLabels = [temperatureLabel, feelsLikeTempLabel, relHumidityLabel, dewPointLabel,
@@ -148,9 +156,8 @@ extension MainViewController {
     }
 }
 
+// MARK: Handler Methods -------------------------
 extension MainViewController {
-
-    // MARK: Handler Methods -------------------------
 
     @objc private func handleLocationUpdated() {
         Task {
@@ -197,6 +204,7 @@ extension Notification.Name {
     static let locationUpdated = Notification.Name("locationUpdated")
 }
 
+// MARK: Delegates -------------------------
 extension MainViewController: LocationConflictViewControllerDelegate {
     func locationConflictViewController(_ controller: LocationConflictViewController, didSelectLocation location: Location) {
         updateLocation(location)
