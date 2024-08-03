@@ -21,152 +21,98 @@ final class ForecaApiHandler {
         if let token = authToken, !token.isEmpty {
             return .success(())
         }
-
-        switch await fetchAuthToken() {
-        case .success(let token):
+        return await fetchAuthToken().map { token in
             self.authToken = token
-            return .success(())
-        case .failure(let error):
-            return .failure(error)
-        }
-    }
-
-    @discardableResult
-    private func getAuthToken() async -> Result<String, NetworkError> {
-        do {
-            let endpointAddress = "\(authUrl)/token?expire_hours=5"
-
-            print("\n Sending getAuthToken request to >>> \(endpointAddress) \n")
-            var urlRequest = URLRequest(url: URL(string: endpointAddress)!)
-
-            urlRequest.httpMethod = "POST"
-            urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-
-            let bodyString = "user=\(apiUser)&password=\(apiP)"
-            urlRequest.httpBody = bodyString.data(using: .utf8)
-
-            let (data, response) = try await URLSession.shared.data(for: urlRequest)
-
-            guard (response as? HTTPURLResponse)?.statusCode == 200 else {
-                print("Invalid response: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
-                return .failure(.networkError)
-            }
-
-            let authResponse = try decoder.decode(AuthResponse.self, from: data)
-
-            return .success(authResponse.accessToken)
-
-        } catch {
-            print("Error: \(error)")
-            return .failure(.networkError)
         }
     }
 
     private func fetchAuthToken() async -> Result<String, NetworkError> {
-        switch await getAuthToken() {
-        case .success(let token):
-            print("\n Access Token: \(token) \n")
-            return .success(token)
-        case .failure(let error):
-            print("\n Failed to fetch token (getAuthToken): \(error) \n")
-            return .failure(error)
+        let endpointAddress = "\(authUrl)/token?expire_hours=5"
+        var urlRequest = URLRequest(url: URL(string: endpointAddress)!)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpBody = "user=\(apiUser)&password=\(apiP)".data(using: .utf8)
+
+        return await performRequest(urlRequest, decodeType: AuthResponse.self)
+            .map { $0.accessToken }
+    }
+
+    private func performRequest<T: Decodable>(_ request: URLRequest, decodeType: T.Type) async -> Result<T, NetworkError> {
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+                return .failure(.networkError)
+            }
+            let decodedResponse = try decoder.decode(T.self, from: data)
+            return .success(decodedResponse)
+        } catch {
+            return .failure(.networkError)
         }
     }
 
     @discardableResult
     private func searchCityInForecaLocationsBase(locationName: String) async -> Result<LocationList, NetworkError> {
         let ensureTokenResult = await ensureAuthToken()
+        guard case .success = ensureTokenResult else { return .failure(.networkError) }
 
-        guard case .success = ensureTokenResult else {
-            return .failure(.networkError)
-        }
+        var urlRequest = URLRequest(url: URL(string: "\(apiUrl)/location/search/\(locationName)?lang=en")!)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        urlRequest.setValue("Bearer \(authToken ?? "")", forHTTPHeaderField: "Authorization")
 
-        do {
-            let endpointAddress = "\(apiUrl)/location/search/\(locationName)?lang=en"
-
-            print("\n Sending search Location Code request to >>> \(endpointAddress) \n")
-            var urlRequest = URLRequest(url: URL(string: endpointAddress)!)
-
-            urlRequest.httpMethod = "POST"
-
-            urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-            urlRequest.setValue("Bearer \(authToken ?? "")", forHTTPHeaderField: "Authorization")
-
-            let (data, response) = try await URLSession.shared.data(for: urlRequest)
-
-            guard (response as? HTTPURLResponse)?.statusCode == 200 else {
-                print("Invalid response: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
-                return .failure(.networkError)
-            }
-
-            let decodedResponse = try decoder.decode(LocationList.self, from: data)
-            return .success(decodedResponse)
-        } catch {
-            print("Error searchCityInForecaLocationsBase : \(error)")
-            return .failure(.networkError)
-        }
+        return await performRequest(urlRequest, decodeType: LocationList.self)
     }
 
     @discardableResult
     func fetchCityFromForecaLocationsBase(for locationName: String) async -> Result<[Location], NetworkError> {
-        let result = await searchCityInForecaLocationsBase(locationName: locationName)
-
-        switch result {
-        case .success(let locationList):
-            return .success(locationList.locations)
-
-        case .failure(let error):
-            print("Can't fetchCityFromForecaLocationsBase form \(locationName) + \(error)")
-            return .failure(error)
-        }
+        return await searchCityInForecaLocationsBase(locationName: locationName)
+            .map { $0.locations }
     }
 
     func extractLocations(from result: Result<[Location], NetworkError>) -> [Location] {
-        switch result {
-        case .success(let locations):
-            return locations
-        case .failure:
-            print("Can't extract locations from \(result)")
-            return []
-        }
+        return result.getOrDefault([])
     }
 
     @discardableResult
     func getDetailedSingleDayForecast(zoneId: Int) async -> DetailedSingleDayForecast {
         let ensureTokenResult = await ensureAuthToken()
+        guard case .success = ensureTokenResult else { return DetailedSingleDayForecast() }
 
-        guard case .success = ensureTokenResult else {
-            print("Error ensuring auth token")
-            return DetailedSingleDayForecast()
-        }
+        var urlRequest = URLRequest(url: URL(string: "\(apiUrl)/current/\(zoneId)")!)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        urlRequest.setValue("Bearer \(authToken ?? "")", forHTTPHeaderField: "Authorization")
 
-        do {
-            let endpointAddress = "\(apiUrl)/current/\(zoneId)"
-            print("\n Sending getDetailedSingleDayForecast to >>> \(endpointAddress) \n")
-
-            var urlRequest = URLRequest(url: URL(string: endpointAddress)!)
-            urlRequest.httpMethod = "POST"
-            urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-            urlRequest.setValue("Bearer \(authToken ?? "")", forHTTPHeaderField: "Authorization")
-
-            let (data, response) = try await URLSession.shared.data(for: urlRequest)
-
-            guard (response as? HTTPURLResponse)?.statusCode == 200 else {
-                print("Invalid response: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
-                return DetailedSingleDayForecast()
-            }
-
-            let decodedResponse = try decoder.decode(DetailedSingleDayForecast.self, from: data)
-            return decodedResponse
-        } catch {
-            print("Error getDetailedSingleDayForecast: \(error)")
-            return DetailedSingleDayForecast()
-        }
+        return await performRequest(urlRequest, decodeType: DetailedSingleDayForecast.self)
+            .getOrDefault(DetailedSingleDayForecast())
     }
 
-    //
-    //    @discardableResult
-    //    func fetchDetailedSingleDayForecast() {
-    //
-    //    }
+    @discardableResult
+    func getWeeklyForecast(zoneId: Int) async -> [WeeklySingleDay] {
+        let ensureTokenResult = await ensureAuthToken()
+        guard case .success = ensureTokenResult else { return [] }
+
+        var urlRequest = URLRequest(url: URL(string: "\(apiUrl)/forecast/daily/\(zoneId)")!)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        urlRequest.setValue("Bearer \(authToken ?? "")", forHTTPHeaderField: "Authorization")
+
+        let result: Result<WeeklyForecast, NetworkError> = await performRequest(urlRequest, decodeType: WeeklyForecast.self)
+
+        switch result {
+        case .success(let weeklyForecast):
+            return weeklyForecast.forecast
+        case .failure:
+            return []
+        }
+    }
+}
+
+extension Result {
+    func getOrDefault(_ defaultValue: Success) -> Success {
+        switch self {
+        case .success(let value): return value
+        case .failure: return defaultValue
+        }
+    }
 }
