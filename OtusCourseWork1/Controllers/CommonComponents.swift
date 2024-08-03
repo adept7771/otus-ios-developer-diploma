@@ -22,14 +22,16 @@ extension CommonComponents {
     }
 }
 
+import UIKit
+
 extension UIView {
     func addAndActivateConstraints(to edges: [Edge], of view: UIView) {
         translatesAutoresizingMaskIntoConstraints = false
         var constraints = [NSLayoutConstraint]()
         for edge in edges {
             switch edge {
-            case .top(let constant):
-                constraints.append(topAnchor.constraint(equalTo: view.topAnchor, constant: constant))
+            case .top(let constant, let relativeTo):
+                constraints.append(topAnchor.constraint(equalTo: relativeTo ?? view.topAnchor, constant: constant))
             case .bottom(let constant):
                 constraints.append(bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: constant))
             case .leading(let constant):
@@ -40,6 +42,12 @@ extension UIView {
                 constraints.append(topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: constant))
             case .safeAreaBottom(let constant):
                 constraints.append(bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: constant))
+            case .safeAreaLeading(let constant):
+                constraints.append(leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: constant))
+            case .safeAreaTrailing(let constant):
+                constraints.append(trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: constant))
+            case .height(let constant):
+                constraints.append(heightAnchor.constraint(equalToConstant: constant))
             }
         }
         NSLayoutConstraint.activate(constraints)
@@ -47,10 +55,14 @@ extension UIView {
 }
 
 public enum Edge {
-    case top(CGFloat)
+    case top(CGFloat, relativeTo: NSLayoutYAxisAnchor? = nil)
     case bottom(CGFloat)
     case leading(CGFloat)
     case trailing(CGFloat)
     case safeAreaTop(CGFloat)
     case safeAreaBottom(CGFloat)
+    case safeAreaLeading(CGFloat)
+    case safeAreaTrailing(CGFloat)
+    case height(CGFloat)
 }
+

@@ -44,9 +44,9 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
     }
 
     var temperatureLabel = UILabel(), feelsLikeTempLabel = UILabel(), precipProbLabel = UILabel(),
-    relHumidityLabel = UILabel(), dewPointLabel = UILabel(), windSpeedLabel = UILabel(),
-    windDirStringLabel = UILabel(), thunderProbLabel = UILabel(), cloudinessLabel = UILabel(),
-    uvIndexLabel = UILabel(), pressureLabel = UILabel()
+        relHumidityLabel = UILabel(), dewPointLabel = UILabel(), windSpeedLabel = UILabel(),
+        windDirStringLabel = UILabel(), thunderProbLabel = UILabel(), cloudinessLabel = UILabel(),
+        uvIndexLabel = UILabel(), pressureLabel = UILabel()
 
     // MARK: DidLoad -------------------------
 
@@ -79,30 +79,15 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         NotificationCenter.default.addObserver(self, selector: #selector(handleLocationUpdated), name: .locationUpdated, object: nil)
 
         // mainScreenView
-
-        
-
-        NSLayoutConstraint.activate([
-            mainScreenView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            mainScreenView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            mainScreenView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            mainScreenView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
+        mainScreenView.addAndActivateConstraints(to: [.safeAreaTop(0), .safeAreaBottom(0), .leading(0), .trailing(0)], of: view)
 
         // locationLabel
-        NSLayoutConstraint.activate([
-            locationLabel.topAnchor.constraint(equalTo: mainScreenView.topAnchor, constant: 15),
-            locationLabel.leadingAnchor.constraint(equalTo: mainScreenView.leadingAnchor, constant: 20),
-            locationLabel.trailingAnchor.constraint(equalTo: mainScreenView.trailingAnchor, constant: -20)
-        ])
+        locationLabel.addAndActivateConstraints(to: [.top(15), .leading(20), .trailing(-20)], of: mainScreenView)
+        locationLabel.addAndActivateConstraints(to: [.top(15, relativeTo: mainScreenView.topAnchor), .leading(20), .trailing(-20)], of: mainScreenView)
 
         // timeLabel
-        NSLayoutConstraint.activate([
-            timeLabel.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: -5),
-            timeLabel.leadingAnchor.constraint(equalTo: mainScreenView.leadingAnchor, constant: 20),
-            timeLabel.trailingAnchor.constraint(equalTo: mainScreenView.trailingAnchor, constant: -20),
-            timeLabel.heightAnchor.constraint(equalToConstant: 40)
-        ])
+        timeLabel.addAndActivateConstraints(to: [.top(-5, relativeTo: locationLabel.bottomAnchor), .leading(20), .trailing(-20), .height(40)],
+                                            of: mainScreenView)
 
         // Add weather labels to main screen view
         let weatherLabels = [temperatureLabel, feelsLikeTempLabel, relHumidityLabel, dewPointLabel,
@@ -115,14 +100,28 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
             mainScreenView.addSubview(label)
         }
 
-        // Setup weather labels constraints
         var previousLabel: UILabel = timeLabel
-        for label in weatherLabels {
-            NSLayoutConstraint.activate([
-                label.topAnchor.constraint(equalTo: previousLabel.bottomAnchor, constant: 10),
-                label.leadingAnchor.constraint(equalTo: mainScreenView.leadingAnchor, constant: 20),
-                label.trailingAnchor.constraint(equalTo: mainScreenView.trailingAnchor, constant: -20)
-            ])
+        for (index, label) in weatherLabels.enumerated() {
+            if index == 0 {
+                label.addAndActivateConstraints(
+                    to: [
+                        .top(10, relativeTo: previousLabel.bottomAnchor),
+                        .leading(20),
+                        .trailing(-20)
+                    ],
+                    of: mainScreenView
+                )
+            } else {
+                // Последующие элементы устанавливаются относительно предыдущего label
+                label.addAndActivateConstraints(
+                    to: [
+                        .top(10, relativeTo: previousLabel.bottomAnchor),
+                        .leading(20),
+                        .trailing(-20)
+                    ],
+                    of: mainScreenView
+                )
+            }
             previousLabel = label
         }
     }
