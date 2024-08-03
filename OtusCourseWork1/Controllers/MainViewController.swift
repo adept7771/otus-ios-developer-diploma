@@ -57,10 +57,7 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
         view.backgroundColor = .systemGray3
 
-        mainScreenView.translatesAutoresizingMaskIntoConstraints = false
-        mainScreenView.backgroundColor = .white
-        view.addSubview(mainScreenView)
-        mainScreenView.addAndActivateConstraints(to: [.safeAreaTop(0), .safeAreaBottom(0), .leading(0), .trailing(0)], of: view)
+        configureMainView(mainScreenView: mainScreenView)
 
         showLocationLabel(mainScreenView: mainScreenView)
         showTimeLabel(mainScreenView: mainScreenView)
@@ -83,6 +80,13 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
 // MARK: UI Methods -------------------------
 extension MainViewController {
+
+    private func configureMainView(mainScreenView: UIView){
+        mainScreenView.translatesAutoresizingMaskIntoConstraints = false
+        mainScreenView.backgroundColor = .white
+        view.addSubview(mainScreenView)
+        mainScreenView.addAndActivateConstraints(to: [.safeAreaTop(0), .safeAreaBottom(0), .leading(0), .trailing(0)], of: view)
+    }
 
     private func showTimeLabel(mainScreenView: UIView){
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
