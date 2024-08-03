@@ -25,7 +25,7 @@
 		94FE4A062C54DE00002A1420 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A052C54DE00002A1420 /* AppDelegate.swift */; };
 		94FE4A0F2C54DE02002A1420 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94FE4A0E2C54DE02002A1420 /* Assets.xcassets */; };
 		94FE4A122C54DE02002A1420 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 94FE4A112C54DE02002A1420 /* Base */; };
-		94FE4A1F2C54F385002A1420 /* ForecaApiHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A1E2C54F385002A1420 /* ForecaApiHandler.swift */; };
+		94FE4A1F2C54F385002A1420 /* ApiHandlerForeca.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE4A1E2C54F385002A1420 /* ApiHandlerForeca.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,7 +49,7 @@
 		94FE4A0E2C54DE02002A1420 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		94FE4A112C54DE02002A1420 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		94FE4A132C54DE02002A1420 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		94FE4A1E2C54F385002A1420 /* ForecaApiHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecaApiHandler.swift; sourceTree = "<group>"; };
+		94FE4A1E2C54F385002A1420 /* ApiHandlerForeca.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiHandlerForeca.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,7 +173,7 @@
 		94FE4A1D2C54F33C002A1420 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				94FE4A1E2C54F385002A1420 /* ForecaApiHandler.swift */,
+				94FE4A1E2C54F385002A1420 /* ApiHandlerForeca.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -260,7 +260,7 @@
 				9458B98B2C5BBDF900A690A1 /* CommonComponents.swift in Sources */,
 				9458B9822C5BA37800A690A1 /* WeeklyForecast.swift in Sources */,
 				9458BA2B2C5CB42800A690A1 /* LocationConflictViewController.swift in Sources */,
-				94FE4A1F2C54F385002A1420 /* ForecaApiHandler.swift in Sources */,
+				94FE4A1F2C54F385002A1420 /* ApiHandlerForeca.swift in Sources */,
 				9458B98D2C5C0FAE00A690A1 /* CityIdHelper.swift in Sources */,
 				9458B9772C5B9F7500A690A1 /* AuthResponse.swift in Sources */,
 				94FE4A062C54DE00002A1420 /* AppDelegate.swift in Sources */,

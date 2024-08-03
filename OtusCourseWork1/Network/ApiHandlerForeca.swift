@@ -1,8 +1,8 @@
 import Foundation
 
-final class ForecaApiHandler {
+final class ApiHandlerForeca {
 
-    static let shared = ForecaApiHandler()
+    static let shared = ApiHandlerForeca()
 
     private let baseUrl = "https://pfa.foreca.com/"
     private var apiUrl: String { return baseUrl + "api/v1" }

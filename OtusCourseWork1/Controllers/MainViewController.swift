@@ -8,7 +8,7 @@
 import UIKit
 
 class MainViewController: UIViewController, LocationDetectorDelegate, CommonComponents {
-    
+
     let mainScreenView = UIView()
 
     lazy var locationDetector = LocationDetector()
@@ -22,7 +22,7 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         didSet {
             print("Current location was set to \(currentLocation)")
             Task {
-                detailedSingleDayForecast = await ForecaApiHandler.shared.getDetailedSingleDayForecast(zoneId: currentLocation.id)
+                detailedSingleDayForecast = await ApiHandlerForeca.shared.getDetailedSingleDayForecast(zoneId: currentLocation.id)
                 print(detailedSingleDayForecast)
             }
         }
@@ -38,17 +38,26 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         }
     }
 
-    var detailedSingleDayForecast: DetailedSingleDayForecast = DetailedSingleDayForecast() {
-        didSet {
-            print("New forecast data: \(detailedSingleDayForecast) \n Presenting >>>>> \n")
-            updateWeatherLabels()
-        }
-    }
-
     var temperatureLabel = UILabel(), feelsLikeTempLabel = UILabel(), precipProbLabel = UILabel(),
         relHumidityLabel = UILabel(), dewPointLabel = UILabel(), windSpeedLabel = UILabel(),
         windDirStringLabel = UILabel(), thunderProbLabel = UILabel(), cloudinessLabel = UILabel(),
         uvIndexLabel = UILabel(), pressureLabel = UILabel()
+
+    var detailedSingleDayForecast: DetailedSingleDayForecast = DetailedSingleDayForecast() {
+        didSet {
+            print("New forecast data: \(detailedSingleDayForecast) \n Presenting >>>>> \n")
+            updateWeatherLabels()
+            Task {
+                currentLocation7DayForecast = await requestParseAndSave7DayForecast(zoneId: currentLocation.id)
+            }
+        }
+    }
+
+    var currentLocation7DayForecast: [WeeklySingleDay] = [WeeklySingleDay]() {
+        didSet {
+            print("New currentLocation7DayForecast data: \(currentLocation7DayForecast) \n Presenting >>>>> \n")
+        }
+    }
 
     // MARK: DidLoad -------------------------
 
@@ -68,7 +77,7 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
         // Subscribe to locationUpdated notification
         NotificationCenter.default.addObserver(self, selector: #selector(handleLocationUpdated), name: .locationUpdated, object: nil)
-        
+
         // CurrentDayForecast show if data received
         addWeatherLabelsForCurrentDayForecastToMainScreen(mainScreenView: mainScreenView)
     }
@@ -163,17 +172,21 @@ extension MainViewController {
 // MARK: Handler Methods -------------------------
 extension MainViewController {
 
+    private func requestParseAndSave7DayForecast(zoneId: Int) async -> [WeeklySingleDay]{
+        return await ApiHandlerForeca.shared.getWeeklyForecast(zoneId: zoneId)
+    }
+
     @objc private func handleLocationUpdated() {
         Task {
             print("Fetching location list from API...")
-            let locationsResult = await ForecaApiHandler.shared.fetchCityFromForecaLocationsBase(for: self.currentLocationCity)
+            let locationsResult = await ApiHandlerForeca.shared.fetchCityFromForecaLocationsBase(for: self.currentLocationCity)
             print("Fetched locations: \(locationsResult)")
 
             filteredLocationsAfterMapping = CityIdHelper.shared.compareLocations(result: locationsResult)
             print("\nFiltered Locations: \(filteredLocationsAfterMapping)\n")
 
             if(filteredLocationsAfterMapping.isEmpty){
-                filteredLocationsAfterMapping = ForecaApiHandler.shared.extractLocations(from: locationsResult)
+                filteredLocationsAfterMapping = ApiHandlerForeca.shared.extractLocations(from: locationsResult)
                 print("\nCopy all locations to filtered array because was conflicts with area detection. FilteredLocationsAfterMapping: \n\n \(filteredLocationsAfterMapping)\n")
             }
         }
