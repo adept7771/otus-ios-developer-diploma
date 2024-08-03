@@ -8,6 +8,8 @@
 import UIKit
 
 class MainViewController: UIViewController, LocationDetectorDelegate, CommonComponents {
+    
+    let mainScreenView = UIView()
 
     lazy var locationDetector = LocationDetector()
     var timeLabel = UILabel()
@@ -55,40 +57,31 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
         view.backgroundColor = .systemGray3
 
-        let mainScreenView = UIView()
         mainScreenView.translatesAutoresizingMaskIntoConstraints = false
         mainScreenView.backgroundColor = .white
         view.addSubview(mainScreenView)
+        mainScreenView.addAndActivateConstraints(to: [.safeAreaTop(0), .safeAreaBottom(0), .leading(0), .trailing(0)], of: view)
 
         locationLabel.translatesAutoresizingMaskIntoConstraints = false
         locationLabel.textAlignment = .center
         locationLabel.numberOfLines = 0
         locationLabel.lineBreakMode = .byWordWrapping
+        mainScreenView.addSubview(locationLabel)
+        locationLabel.addAndActivateConstraints(to: [.top(15), .leading(20), .trailing(-20)], of: mainScreenView)
+        locationLabel.addAndActivateConstraints(to: [.top(15, relativeTo: mainScreenView.topAnchor), .leading(20), .trailing(-20)], of: mainScreenView)
 
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
         timeLabel.textAlignment = .center
         timeLabel.text = "Good \(TimeManager.shared.getTimeOfDay())!"
-
-        mainScreenView.addSubview(locationLabel)
         mainScreenView.addSubview(timeLabel)
+        timeLabel.addAndActivateConstraints(to: [.top(-5, relativeTo: locationLabel.bottomAnchor), .leading(20), .trailing(-20), .height(40)],
+                                            of: mainScreenView)
 
         locationDetector.delegate = self
         locationDetector.startUpdatingLocation()
 
         // Subscribe to locationUpdated notification
         NotificationCenter.default.addObserver(self, selector: #selector(handleLocationUpdated), name: .locationUpdated, object: nil)
-
-        // mainScreenView
-        mainScreenView.addAndActivateConstraints(to: [.safeAreaTop(0), .safeAreaBottom(0), .leading(0), .trailing(0)], of: view)
-
-        // locationLabel
-        locationLabel.addAndActivateConstraints(to: [.top(15), .leading(20), .trailing(-20)], of: mainScreenView)
-        locationLabel.addAndActivateConstraints(to: [.top(15, relativeTo: mainScreenView.topAnchor), .leading(20), .trailing(-20)], of: mainScreenView)
-
-        // timeLabel
-        timeLabel.addAndActivateConstraints(to: [.top(-5, relativeTo: locationLabel.bottomAnchor), .leading(20), .trailing(-20), .height(40)],
-                                            of: mainScreenView)
-
 
         addWeatherLabelsForCurrentDayForecastToMainScreen(mainScreenView: mainScreenView)
     }
@@ -118,23 +111,11 @@ extension MainViewController {
         var previousLabel: UILabel = timeLabel
         for (index, label) in weatherLabels.enumerated() {
             if index == 0 {
-                label.addAndActivateConstraints(
-                    to: [
-                        .top(10, relativeTo: previousLabel.bottomAnchor),
-                        .leading(20),
-                        .trailing(-20)
-                    ],
-                    of: mainScreenView
-                )
+                label.addAndActivateConstraints(to: [.top(10, relativeTo: previousLabel.bottomAnchor), .leading(20), .trailing(-20)], of: mainScreenView)
+
             } else {
-                label.addAndActivateConstraints(
-                    to: [
-                        .top(10, relativeTo: previousLabel.bottomAnchor),
-                        .leading(20),
-                        .trailing(-20)
-                    ],
-                    of: mainScreenView
-                )
+                label.addAndActivateConstraints(to: [.top(10, relativeTo: previousLabel.bottomAnchor), .leading(20), .trailing(-20)], of: mainScreenView)
+
             }
             previousLabel = label
         }
