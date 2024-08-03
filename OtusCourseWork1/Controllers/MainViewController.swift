@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Combine
 
 class MainViewController: UIViewController, LocationDetectorDelegate, CommonComponents {
 
@@ -16,6 +15,7 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
     var currentLocationCity = ""
     var currentLocationCountry = ""
+    
     var currentLocation: Location = Location() {
         didSet {
             print("Current location was set to \(currentLocation)")
@@ -24,9 +24,22 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
             }
         }
     }
-    
-    @Published var filteredLocationsAfterMapping = [Location]()
-    private var cancellables = Set<AnyCancellable>()
+
+    var filteredLocationsAfterMapping = [Location]() {
+        didSet {
+            if filteredLocationsAfterMapping.count > 1 {
+                DispatchQueue.main.async {
+                    self.showLocationConflictViewController()
+                }
+            }
+        }
+    }
+
+    var detailedSingleDayForecast: DetailedSingleDayForecast = DetailedSingleDayForecast() {
+        didSet {
+            print("Current location was set to \(currentLocation)")
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,8 +68,6 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
         // Subscribe to locationUpdated notification
         NotificationCenter.default.addObserver(self, selector: #selector(handleLocationUpdated), name: .locationUpdated, object: nil)
-
-        setupSubscribers()
 
         // mainScreenView
         NSLayoutConstraint.activate([
@@ -118,18 +129,6 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         NotificationCenter.default.removeObserver(self, name: .locationUpdated, object: nil)
     }
 
-    // Observing
-    private func setupSubscribers() {
-        $filteredLocationsAfterMapping
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] locations in
-                if locations.count > 1 {
-                    self?.showLocationConflictViewController()
-                }
-            }
-            .store(in: &cancellables)
-    }
-
     private func showLocationConflictViewController() {
         let locationConflictVC = LocationConflictViewController(locations: filteredLocationsAfterMapping)
         locationConflictVC.delegate = self // Устанавливаем делегата
@@ -141,9 +140,9 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         present(navigationController, animated: true, completion: nil)
     }
 
-
     func updateLocation(_ location: Location) {
         locationLabel.text = "\(location.name), \(location.country)"
+        currentLocation = location
     }
 }
 
@@ -154,6 +153,6 @@ extension Notification.Name {
 extension MainViewController: LocationConflictViewControllerDelegate {
     func locationConflictViewController(_ controller: LocationConflictViewController, didSelectLocation location: Location) {
         updateLocation(location)
-        currentLocation = location
     }
 }
+
