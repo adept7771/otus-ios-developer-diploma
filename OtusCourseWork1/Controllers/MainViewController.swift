@@ -13,7 +13,7 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
     var currentLocation: Location = Location() {
         didSet {
-            print("Current location was set BY USER CHOISE to \(currentLocation)")
+            print("Current location was set BY USER CHOICE to \(currentLocation)")
             Task {
                 detailedSingleDayForecast = await ApiHandlerForeca.shared.getDetailedSingleDayForecast(zoneId: currentLocation.id)
                 print(detailedSingleDayForecast)
@@ -26,6 +26,11 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
             if filteredLocationsAfterMapping.count > 1 {
                 DispatchQueue.main.async {
                     self.showLocationConflictViewController()
+                }
+            } else if filteredLocationsAfterMapping.count == 1 {
+                // Если нет конфликтов, обновляем текущую локацию и погоду
+                if let location = filteredLocationsAfterMapping.first {
+                    updateLocation(location)
                 }
             }
         }
@@ -202,28 +207,50 @@ extension MainViewController {
         return await ApiHandlerForeca.shared.getWeeklyForecast(zoneId: zoneId)
     }
 
-    func didUpdateLocationName(_ locationName: String) {
-        locationLabel.text = locationName
+    private func fetchLocationData() async {
+        print("Fetching location list from API...")
+        let locationsResult = await ApiHandlerForeca.shared.fetchCityFromForecaLocationsBase(for: self.currentLocationCity)
+        print("Fetched locations: \(locationsResult)")
 
+        filteredLocationsAfterMapping = CityIdHelper.shared.compareLocations(result: locationsResult)
+        print("\nFiltered Locations: \(filteredLocationsAfterMapping)\n")
+
+        if filteredLocationsAfterMapping.isEmpty {
+            filteredLocationsAfterMapping = ApiHandlerForeca.shared.extractLocations(from: locationsResult)
+            print("\nCopy all locations to filtered array because was conflicts with area detection. FilteredLocationsAfterMapping: \n\n \(filteredLocationsAfterMapping)\n")
+        }
+    }
+
+    private func handleLocationUpdate() async {
+        if let location = filteredLocationsAfterMapping.first {
+            updateLocation(location)
+        }
+    }
+
+    func didUpdateLocationName(_ locationName: String) {
+        // Разделяем название города и страны
         let locationNameComponents = locationName.components(separatedBy: ",")
 
         if locationNameComponents.count == 2 {
-            currentLocationCity = locationNameComponents[0].trimmingCharacters(in: .whitespacesAndNewlines)
-            currentLocationCountry = locationNameComponents[1].trimmingCharacters(in: .whitespacesAndNewlines)
+            let apiCityName = locationNameComponents[0].trimmingCharacters(in: .whitespacesAndNewlines)
+            let apiCountryName = locationNameComponents[1].trimmingCharacters(in: .whitespacesAndNewlines)
 
-            // Directly handle the location update without notification
+            // Используем маппер для получения отформатированного названия
+            if let (city, country) = CityNameMapping.getCurrentNameAndCountry(for: apiCityName) {
+                locationLabel.text = "\(city), \(country)"
+                currentLocationCity = city
+                currentLocationCountry = country
+            } else {
+                // Если маппер не находит название, используем данные из API
+                locationLabel.text = "\(apiCityName), \(apiCountryName)"
+                currentLocationCity = apiCityName
+                currentLocationCountry = apiCountryName
+            }
+
+            // Обновляем данные
             Task {
-                print("Fetching location list from API...")
-                let locationsResult = await ApiHandlerForeca.shared.fetchCityFromForecaLocationsBase(for: self.currentLocationCity)
-                print("Fetched locations: \(locationsResult)")
-
-                filteredLocationsAfterMapping = CityIdHelper.shared.compareLocations(result: locationsResult)
-                print("\nFiltered Locations: \(filteredLocationsAfterMapping)\n")
-
-                if filteredLocationsAfterMapping.isEmpty {
-                    filteredLocationsAfterMapping = ApiHandlerForeca.shared.extractLocations(from: locationsResult)
-                    print("\nCopy all locations to filtered array because was conflicts with area detection. FilteredLocationsAfterMapping: \n\n \(filteredLocationsAfterMapping)\n")
-                }
+                await fetchLocationData()
+                await handleLocationUpdate()
             }
         } else {
             print("Invalid location string")
@@ -242,3 +269,4 @@ extension MainViewController: LocationConflictViewControllerDelegate {
         updateLocation(location)
     }
 }
+

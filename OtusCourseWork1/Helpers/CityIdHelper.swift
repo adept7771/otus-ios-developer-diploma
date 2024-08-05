@@ -20,7 +20,7 @@ final class CityIdHelper {
                 let incLocationName = incomingLocation.name
                 let incLocationCountry = incomingLocation.country
 
-                for (mappedOldCityName, (mappedNewCityName, mappedCountry)) in CityNameMapping.cityMappings {
+                for (mappedOldCityName, (_, mappedCountry)) in CityNameMapping.cityMappings {
                     if incLocationName == mappedOldCityName && incLocationCountry == mappedCountry {
                         filteredLocations.append(incomingLocation)
                     }

@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 
 // MSK 55,751244 37,618423
-// SPB 37.618423 37.618423
+// SPB 59,937500 30,308611
 
 class LocationDetector: NSObject, CLLocationManagerDelegate {
     
