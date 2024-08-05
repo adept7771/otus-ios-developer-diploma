@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainViewController: UIViewController, LocationDetectorDelegate, CommonComponents {
+class MainViewController: UIViewController, LocationDetectorDelegate, CommonComponents, UITableViewDataSource, UITableViewDelegate {
 
     let mainScreenView = UIView()
 
@@ -20,7 +20,7 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
     var currentLocation: Location = Location() {
         didSet {
-            print("Current location was set to \(currentLocation)")
+            print("Current location was set BY USER CHOISE to \(currentLocation)")
             Task {
                 detailedSingleDayForecast = await ApiHandlerForeca.shared.getDetailedSingleDayForecast(zoneId: currentLocation.id)
                 print(detailedSingleDayForecast)
@@ -45,7 +45,7 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
     var detailedSingleDayForecast: DetailedSingleDayForecast = DetailedSingleDayForecast() {
         didSet {
-            print("New forecast data: \(detailedSingleDayForecast) \n Presenting >>>>> \n")
+            print("\nNew detailedSingleDayForecast data Presenting >>>> \n \(detailedSingleDayForecast) \n")
             updateWeatherLabels()
             Task {
                 currentLocation7DayForecast = await requestParseAndSave7DayForecast(zoneId: currentLocation.id)
@@ -53,13 +53,14 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         }
     }
 
+    private var tableView7daysForecastCurrentLocation: UITableView = UITableView()
+
     var currentLocation7DayForecast: [WeeklySingleDay] = [WeeklySingleDay]() {
         didSet {
-            print("New currentLocation7DayForecast data: \(currentLocation7DayForecast) \n Presenting >>>>> \n")
+            print("\nNew currentLocation7DayForecast data. Presenting >>>>> \n \(currentLocation7DayForecast) \n")
+            tableView7daysForecastCurrentLocation.reloadData()
         }
     }
-
-    // MARK: DidLoad -------------------------
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,15 +72,16 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         showLocationLabel(mainScreenView: mainScreenView)
         showTimeLabel(mainScreenView: mainScreenView)
 
+        // Добавление всех необходимых сабвью перед установкой ограничений
+        addWeatherLabelsForCurrentDayForecastToMainScreen(mainScreenView: mainScreenView)
+        setuptableView7daysForecastCurrentLocation(in: mainScreenView)
+
         // Delegates
         locationDetector.delegate = self
         locationDetector.startUpdatingLocation()
 
         // Subscribe to locationUpdated notification
         NotificationCenter.default.addObserver(self, selector: #selector(handleLocationUpdated), name: .locationUpdated, object: nil)
-
-        // CurrentDayForecast show if data received
-        addWeatherLabelsForCurrentDayForecastToMainScreen(mainScreenView: mainScreenView)
     }
 
     deinit {
@@ -89,6 +91,27 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
 
 // MARK: UI Methods -------------------------
 extension MainViewController {
+
+    private func setuptableView7daysForecastCurrentLocation(in mainScreenView: UIView) {
+        tableView7daysForecastCurrentLocation = UITableView(frame: .zero, style: .plain)
+        tableView7daysForecastCurrentLocation.translatesAutoresizingMaskIntoConstraints = false
+        tableView7daysForecastCurrentLocation.backgroundColor = .clear
+        tableView7daysForecastCurrentLocation.dataSource = self
+        tableView7daysForecastCurrentLocation.delegate = self
+        tableView7daysForecastCurrentLocation.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+
+        mainScreenView.addSubview(tableView7daysForecastCurrentLocation)
+
+        // Устанавливаем ограничения таблицы
+        tableView7daysForecastCurrentLocation.addAndActivateConstraints(
+            to: [.top(10, relativeTo: pressureLabel.bottomAnchor), .leading(0), .trailing(0), .bottom(0)],
+            of: mainScreenView
+        )
+
+        tableView7daysForecastCurrentLocation.separatorStyle = .none
+        tableView7daysForecastCurrentLocation.isScrollEnabled = true
+        tableView7daysForecastCurrentLocation.allowsSelection = false
+    }
 
     private func configureMainView(mainScreenView: UIView){
         mainScreenView.translatesAutoresizingMaskIntoConstraints = false
@@ -112,7 +135,6 @@ extension MainViewController {
         locationLabel.numberOfLines = 0
         locationLabel.lineBreakMode = .byWordWrapping
         mainScreenView.addSubview(locationLabel)
-        locationLabel.addAndActivateConstraints(to: [.top(15), .leading(20), .trailing(-20)], of: mainScreenView)
         locationLabel.addAndActivateConstraints(to: [.top(15, relativeTo: mainScreenView.topAnchor), .leading(20), .trailing(-20)], of: mainScreenView)
     }
 
@@ -121,14 +143,12 @@ extension MainViewController {
                              windSpeedLabel, windDirStringLabel, thunderProbLabel, cloudinessLabel,
                              precipProbLabel, uvIndexLabel, pressureLabel]
 
-        // Добавление всех лейблов на mainScreenView
         for label in weatherLabels {
             label.translatesAutoresizingMaskIntoConstraints = false
             label.textAlignment = .left
             mainScreenView.addSubview(label)
         }
 
-        // Установка констрейнтов
         var previousLabel: UILabel = timeLabel
         for (index, label) in weatherLabels.enumerated() {
             if index == 0 {
@@ -141,7 +161,6 @@ extension MainViewController {
             previousLabel = label
         }
     }
-
 
     private func showLocationConflictViewController() {
         let locationConflictVC = LocationConflictViewController(locations: filteredLocationsAfterMapping)
@@ -171,6 +190,27 @@ extension MainViewController {
 
 // MARK: Handler Methods -------------------------
 extension MainViewController {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return currentLocation7DayForecast.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let forecast = currentLocation7DayForecast[indexPath.row]
+
+        cell.textLabel?.text = """
+            Date: \(forecast.date)
+            Max Temp: \(forecast.maxTemp)°C
+            Min Temp: \(forecast.minTemp)°C
+            Precip Accum: \(forecast.precipAccum) mm
+            Max Wind Speed: \(forecast.maxWindSpeed) km/h
+            """
+        cell.textLabel?.numberOfLines = 0
+        cell.textLabel?.textColor = .black
+
+        return cell
+    }
 
     private func requestParseAndSave7DayForecast(zoneId: Int) async -> [WeeklySingleDay]{
         return await ApiHandlerForeca.shared.getWeeklyForecast(zoneId: zoneId)
@@ -208,9 +248,6 @@ extension MainViewController {
         }
     }
 
-
-
-
     func updateLocation(_ location: Location) {
         locationLabel.text = "\(location.name), \(location.country)"
         currentLocation = location
@@ -227,4 +264,5 @@ extension MainViewController: LocationConflictViewControllerDelegate {
         updateLocation(location)
     }
 }
+
 
