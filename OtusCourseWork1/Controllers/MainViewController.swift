@@ -1,10 +1,3 @@
-//
-//  LocationUndefinedViewController.swift
-//  OtusCourseWork1
-//
-//  Created by Dmitry Potapov on 02.08.2024.
-//
-
 import UIKit
 
 class MainViewController: UIViewController, LocationDetectorDelegate, CommonComponents, UITableViewDataSource, UITableViewDelegate {
@@ -79,13 +72,6 @@ class MainViewController: UIViewController, LocationDetectorDelegate, CommonComp
         // Delegates
         locationDetector.delegate = self
         locationDetector.startUpdatingLocation()
-
-        // Subscribe to locationUpdated notification
-        NotificationCenter.default.addObserver(self, selector: #selector(handleLocationUpdated), name: .locationUpdated, object: nil)
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .locationUpdated, object: nil)
     }
 }
 
@@ -113,14 +99,14 @@ extension MainViewController {
         tableView7daysForecastCurrentLocation.allowsSelection = false
     }
 
-    private func configureMainView(mainScreenView: UIView){
+    private func configureMainView(mainScreenView: UIView) {
         mainScreenView.translatesAutoresizingMaskIntoConstraints = false
         mainScreenView.backgroundColor = .white
         view.addSubview(mainScreenView)
         mainScreenView.addAndActivateConstraints(to: [.safeAreaTop(0), .safeAreaBottom(0), .leading(0), .trailing(0)], of: view)
     }
 
-    private func showTimeLabel(mainScreenView: UIView){
+    private func showTimeLabel(mainScreenView: UIView) {
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
         timeLabel.textAlignment = .center
         timeLabel.text = "Good \(TimeManager.shared.getTimeOfDay())!"
@@ -129,7 +115,7 @@ extension MainViewController {
                                             of: mainScreenView)
     }
 
-    private func showLocationLabel(mainScreenView: UIView){
+    private func showLocationLabel(mainScreenView: UIView) {
         locationLabel.translatesAutoresizingMaskIntoConstraints = false
         locationLabel.textAlignment = .center
         locationLabel.numberOfLines = 0
@@ -212,24 +198,8 @@ extension MainViewController {
         return cell
     }
 
-    private func requestParseAndSave7DayForecast(zoneId: Int) async -> [WeeklySingleDay]{
+    private func requestParseAndSave7DayForecast(zoneId: Int) async -> [WeeklySingleDay] {
         return await ApiHandlerForeca.shared.getWeeklyForecast(zoneId: zoneId)
-    }
-
-    @objc private func handleLocationUpdated() {
-        Task {
-            print("Fetching location list from API...")
-            let locationsResult = await ApiHandlerForeca.shared.fetchCityFromForecaLocationsBase(for: self.currentLocationCity)
-            print("Fetched locations: \(locationsResult)")
-
-            filteredLocationsAfterMapping = CityIdHelper.shared.compareLocations(result: locationsResult)
-            print("\nFiltered Locations: \(filteredLocationsAfterMapping)\n")
-
-            if(filteredLocationsAfterMapping.isEmpty){
-                filteredLocationsAfterMapping = ApiHandlerForeca.shared.extractLocations(from: locationsResult)
-                print("\nCopy all locations to filtered array because was conflicts with area detection. FilteredLocationsAfterMapping: \n\n \(filteredLocationsAfterMapping)\n")
-            }
-        }
     }
 
     func didUpdateLocationName(_ locationName: String) {
@@ -241,8 +211,20 @@ extension MainViewController {
             currentLocationCity = locationNameComponents[0].trimmingCharacters(in: .whitespacesAndNewlines)
             currentLocationCountry = locationNameComponents[1].trimmingCharacters(in: .whitespacesAndNewlines)
 
-            // Send notification after updating the currentLocationCity
-            NotificationCenter.default.post(name: .locationUpdated, object: nil)
+            // Directly handle the location update without notification
+            Task {
+                print("Fetching location list from API...")
+                let locationsResult = await ApiHandlerForeca.shared.fetchCityFromForecaLocationsBase(for: self.currentLocationCity)
+                print("Fetched locations: \(locationsResult)")
+
+                filteredLocationsAfterMapping = CityIdHelper.shared.compareLocations(result: locationsResult)
+                print("\nFiltered Locations: \(filteredLocationsAfterMapping)\n")
+
+                if filteredLocationsAfterMapping.isEmpty {
+                    filteredLocationsAfterMapping = ApiHandlerForeca.shared.extractLocations(from: locationsResult)
+                    print("\nCopy all locations to filtered array because was conflicts with area detection. FilteredLocationsAfterMapping: \n\n \(filteredLocationsAfterMapping)\n")
+                }
+            }
         } else {
             print("Invalid location string")
         }
@@ -254,15 +236,9 @@ extension MainViewController {
     }
 }
 
-extension Notification.Name {
-    static let locationUpdated = Notification.Name("locationUpdated")
-}
-
 // MARK: Delegates -------------------------
 extension MainViewController: LocationConflictViewControllerDelegate {
     func locationConflictViewController(_ controller: LocationConflictViewController, didSelectLocation location: Location) {
         updateLocation(location)
     }
 }
-
-

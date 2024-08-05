@@ -9,6 +9,9 @@ import Foundation
 import UIKit
 import CoreLocation
 
+// MSK 55,751244 37,618423
+// SPB 37.618423 37.618423
+
 class LocationDetector: NSObject, CLLocationManagerDelegate {
     
     private let locationManager = CLLocationManager()
