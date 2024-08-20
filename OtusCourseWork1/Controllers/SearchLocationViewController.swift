@@ -14,6 +14,7 @@ class SearchLocationViewController: UIViewController {
     let titleLabelLocationSearch = UILabel()
     var locationTextField = UITextField()
     let locationSeeekButton = UIButton()
+    let forecastTableView = UITableView()
 
     var chosenLocation = "" {
         didSet {
@@ -32,16 +33,32 @@ class SearchLocationViewController: UIViewController {
             case 0:
                 showAlert(title: "ForecaDB search error", message: "No locations found in DB for \(chosenLocation). Try to change location name (choose another)")
             case 1:
-                print("")
+                resultCity = resultCities.first!
             case _ where resultCities.count > 1:
-                print("")
+                presentLocationSelectionModal()
             default:
-                print("Something going wrong while detecting parsing cities locations")
+                print("Something went wrong while detecting/parsing cities locations")
             }
         }
     }
-    
-    var resultCity: Location = Location()
+
+    var resultCity: Location = Location() {
+        didSet {
+            print("Selected city: \(resultCity.name) \(resultCity.country) \(resultCity.timezone)")
+
+            Task {
+                print("Getting forecast for \(resultCity.name)")
+                weeklySingleDayForecast = await ApiHandlerForeca.shared.getWeeklyForecast(zoneId: resultCity.id)
+            }
+        }
+    }
+
+    var weeklySingleDayForecast: [WeeklySingleDay] = [] {
+        didSet {
+            print("Showing weekly forecast for \(resultCity.name)")
+            forecastTableView.reloadData() // Обновление таблицы
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,9 +66,12 @@ class SearchLocationViewController: UIViewController {
         view.backgroundColor = .systemGray3
 
         configureSearchScreenView(searchScreenView: searchScreenView)
+        
         configureTitleLabel(searchScreenView: searchScreenView)
         configureLocationTextField(searchScreenView: searchScreenView)
         configureSearchButton(searchScreenView: searchScreenView)
+
+        configureForecastTableView(searchScreenView: searchScreenView)
 
         locationSeeekButton.addTarget(self, action: #selector(handleSearchButtonTapped), for: .touchUpInside)
         locationSeeekButton.addTarget(self, action: #selector(buttonTouchDown), for: [.touchDown, .touchDragEnter])
@@ -80,6 +100,45 @@ class SearchLocationViewController: UIViewController {
             self.locationSeeekButton.transform = isPressed ? CGAffineTransform(scaleX: 0.95, y: 0.95) : .identity
             self.locationSeeekButton.backgroundColor = isPressed ? .systemBlue.withAlphaComponent(0.8) : .systemBlue
         }
+    }
+
+    // Метод для отображения модального экрана с выбором локации
+    private func presentLocationSelectionModal() {
+        let locationSelectionVC = LocationSelectionViewController()
+        locationSelectionVC.locations = resultCities
+        locationSelectionVC.delegate = self
+        locationSelectionVC.modalPresentationStyle = .automatic
+        present(locationSelectionVC, animated: true, completion: nil)
+    }
+
+    private func configureForecastTableView(searchScreenView: UIView) {
+            forecastTableView.dataSource = self
+            forecastTableView.delegate = self
+            forecastTableView.register(UITableViewCell.self, forCellReuseIdentifier: "forecastCell")
+            searchScreenView.addSubview(forecastTableView)
+
+            forecastTableView.addAndActivateConstraints(to: [
+                .top(20, relativeTo: locationSeeekButton.bottomAnchor),
+                .leading(20),
+                .trailing(-20),
+                .bottom(0, relativeTo: searchScreenView.bottomAnchor)
+            ], of: searchScreenView)
+        }
+
+}
+
+// MARK: - UITableViewDataSource, UITableViewDelegate -------------------------
+extension SearchLocationViewController: UITableViewDataSource, UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return weeklySingleDayForecast.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "forecastCell", for: indexPath)
+        let dayForecast = weeklySingleDayForecast[indexPath.row]
+        cell.textLabel?.text = "\(dayForecast.date): \(dayForecast.minTemp)°C - \(dayForecast.maxTemp)°C, Wind M/s: \(dayForecast.maxWindSpeed)"
+        return cell
     }
 }
 
@@ -142,11 +201,58 @@ extension SearchLocationViewController: UITextFieldDelegate {
     }
 }
 
-// MARK: Show Alert -------------------------
 extension SearchLocationViewController {
     func showAlert(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alertController, animated: true, completion: nil)
+    }
+}
+
+extension SearchLocationViewController: LocationSelectionDelegate {
+    func didChooseLocation(_ location: Location) {
+        resultCity = location
+    }
+}
+
+protocol LocationSelectionDelegate: AnyObject {
+    func didChooseLocation(_ location: Location)
+}
+
+class LocationSelectionViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+
+    var locations: [Location] = []
+    weak var delegate: LocationSelectionDelegate?
+    private let tableView = UITableView()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        configureTableView()
+    }
+
+    private func configureTableView() {
+        view.addSubview(tableView)
+        tableView.frame = view.bounds
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return locations.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let currentLocation = locations[indexPath.row]
+        cell.textLabel?.text = "\(currentLocation.name) \(currentLocation.country) \(currentLocation.timezone)"
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedLocation = locations[indexPath.row]
+        delegate?.didChooseLocation(selectedLocation)
+        dismiss(animated: true, completion: nil)
     }
 }

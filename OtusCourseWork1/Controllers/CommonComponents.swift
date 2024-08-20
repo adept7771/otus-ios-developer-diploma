@@ -32,12 +32,12 @@ extension UIView {
             switch edge {
             case .top(let constant, let relativeTo):
                 constraints.append(topAnchor.constraint(equalTo: relativeTo ?? view.topAnchor, constant: constant))
-            case .bottom(let constant):
-                constraints.append(bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: constant))
-            case .leading(let constant):
-                constraints.append(leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: constant))
-            case .trailing(let constant):
-                constraints.append(trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: constant))
+            case .bottom(let constant, let relativeTo):
+                constraints.append(bottomAnchor.constraint(equalTo: relativeTo ?? view.bottomAnchor, constant: constant))
+            case .leading(let constant, let relativeTo):
+                constraints.append(leadingAnchor.constraint(equalTo: relativeTo ?? view.leadingAnchor, constant: constant))
+            case .trailing(let constant, let relativeTo):
+                constraints.append(trailingAnchor.constraint(equalTo: relativeTo ?? view.trailingAnchor, constant: constant))
             case .safeAreaTop(let constant):
                 constraints.append(topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: constant))
             case .safeAreaBottom(let constant):
@@ -56,9 +56,9 @@ extension UIView {
 
 public enum Edge {
     case top(CGFloat, relativeTo: NSLayoutYAxisAnchor? = nil)
-    case bottom(CGFloat)
-    case leading(CGFloat)
-    case trailing(CGFloat)
+    case bottom(CGFloat, relativeTo: NSLayoutYAxisAnchor? = nil)
+    case leading(CGFloat, relativeTo: NSLayoutXAxisAnchor? = nil)
+    case trailing(CGFloat, relativeTo: NSLayoutXAxisAnchor? = nil)
     case safeAreaTop(CGFloat)
     case safeAreaBottom(CGFloat)
     case safeAreaLeading(CGFloat)
