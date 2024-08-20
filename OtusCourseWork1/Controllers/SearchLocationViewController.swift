@@ -8,13 +8,16 @@
 import Foundation
 import UIKit
 
-class SearchLocationViewController: UIViewController {
+class SearchLocationViewController: UIViewController, CommonComponents {
 
     let searchScreenView = UIView()
     let titleLabelLocationSearch = UILabel()
     var locationTextField = UITextField()
     let locationSeeekButton = UIButton()
     let forecastTableView = UITableView()
+
+    // Флаг для контроля необходимости показа модального окна
+    private var shouldPresentLocationSelectionModal = false
 
     var chosenLocation = "" {
         didSet {
@@ -29,15 +32,23 @@ class SearchLocationViewController: UIViewController {
 
     var resultCities: [Location] = [] {
         didSet {
+            guard !resultCities.isEmpty else {
+                print("resultCities is empty")
+                return
+            }
+
             switch resultCities.count {
             case 0:
                 showAlert(title: "ForecaDB search error", message: "No locations found in DB for \(chosenLocation). Try to change location name (choose another)")
             case 1:
                 resultCity = resultCities.first!
             case _ where resultCities.count > 1:
-                presentLocationSelectionModal()
+                if shouldPresentLocationSelectionModal {
+                    presentLocationSelectionModal()
+                    shouldPresentLocationSelectionModal = false // Сбрасываем флаг после показа модального окна
+                }
             default:
-                print("Something went wrong while detecting/parsing cities locations")
+                print("Unexpected resultCities state")
             }
         }
     }
@@ -66,7 +77,7 @@ class SearchLocationViewController: UIViewController {
         view.backgroundColor = .systemGray3
 
         configureSearchScreenView(searchScreenView: searchScreenView)
-        
+
         configureTitleLabel(searchScreenView: searchScreenView)
         configureLocationTextField(searchScreenView: searchScreenView)
         configureSearchButton(searchScreenView: searchScreenView)
@@ -84,7 +95,7 @@ class SearchLocationViewController: UIViewController {
             return
         }
         chosenLocation = locationText
-        locationTextField.text = chosenLocation
+        shouldPresentLocationSelectionModal = true
     }
 
     @objc private func buttonTouchDown() {
@@ -112,18 +123,18 @@ class SearchLocationViewController: UIViewController {
     }
 
     private func configureForecastTableView(searchScreenView: UIView) {
-            forecastTableView.dataSource = self
-            forecastTableView.delegate = self
-            forecastTableView.register(UITableViewCell.self, forCellReuseIdentifier: "forecastCell")
-            searchScreenView.addSubview(forecastTableView)
+        forecastTableView.dataSource = self
+        forecastTableView.delegate = self
+        forecastTableView.register(UITableViewCell.self, forCellReuseIdentifier: "forecastCell")
+        searchScreenView.addSubview(forecastTableView)
 
-            forecastTableView.addAndActivateConstraints(to: [
-                .top(20, relativeTo: locationSeeekButton.bottomAnchor),
-                .leading(20),
-                .trailing(-20),
-                .bottom(0, relativeTo: searchScreenView.bottomAnchor)
-            ], of: searchScreenView)
-        }
+        forecastTableView.addAndActivateConstraints(to: [
+            .top(20, relativeTo: locationSeeekButton.bottomAnchor),
+            .leading(20),
+            .trailing(-20),
+            .bottom(0, relativeTo: searchScreenView.bottomAnchor)
+        ], of: searchScreenView)
+    }
 
 }
 
@@ -201,17 +212,11 @@ extension SearchLocationViewController: UITextFieldDelegate {
     }
 }
 
-extension SearchLocationViewController {
-    func showAlert(title: String, message: String) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alertController, animated: true, completion: nil)
-    }
-}
-
 extension SearchLocationViewController: LocationSelectionDelegate {
     func didChooseLocation(_ location: Location) {
         resultCity = location
+        resultCities = [] // Очищаем resultCities после выбора города
+        print("Selected city: \(resultCity.name)")
     }
 }
 
