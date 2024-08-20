@@ -155,7 +155,7 @@ extension MainViewController {
 
     private func showLocationConflictViewController() {
         let locationConflictVC = LocationConflictViewController(locations: filteredLocationsAfterMapping)
-        locationConflictVC.delegate = self // Устанавливаем делегата
+        locationConflictVC.delegate = self
 
         let navigationController = UINavigationController(rootViewController: locationConflictVC)
         navigationController.modalPresentationStyle = .pageSheet
@@ -228,26 +228,19 @@ extension MainViewController {
     }
 
     func didUpdateLocationName(_ locationName: String) {
-        // Разделяем название города и страны
         let locationNameComponents = locationName.components(separatedBy: ",")
-
         if locationNameComponents.count == 2 {
             let apiCityName = locationNameComponents[0].trimmingCharacters(in: .whitespacesAndNewlines)
             let apiCountryName = locationNameComponents[1].trimmingCharacters(in: .whitespacesAndNewlines)
-
-            // Используем маппер для получения отформатированного названия
             if let (city, country) = CityNameMapping.getCurrentNameAndCountry(for: apiCityName) {
-                locationLabel.text = "\(city), \(country)"
                 currentLocationCity = city
                 currentLocationCountry = country
+                updateLocationLabel(city: city, country: country)
             } else {
-                // Если маппер не находит название, используем данные из API
-                locationLabel.text = "\(apiCityName), \(apiCountryName)"
                 currentLocationCity = apiCityName
                 currentLocationCountry = apiCountryName
+                updateLocationLabel(city: apiCityName, country: apiCountryName)
             }
-
-            // Обновляем данные
             Task {
                 await fetchLocationData()
                 await handleLocationUpdate()
@@ -257,8 +250,17 @@ extension MainViewController {
         }
     }
 
+    private func updateLocationLabel(city: String, country: String) {
+        DispatchQueue.main.async {
+            self.locationLabel.text = "\(city), \(country)"
+        }
+    }
+
+
     func updateLocation(_ location: Location) {
-        locationLabel.text = "\(location.name), \(location.country)"
+        DispatchQueue.main.async {
+            self.locationLabel.text = "\(location.name), \(location.country)"
+        }
         currentLocation = location
     }
 }
