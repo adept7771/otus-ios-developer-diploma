@@ -17,7 +17,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let secondNavVC = UINavigationController(rootViewController: secondVC)
         secondNavVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass.circle.fill"), tag: 1)
 
-        tabBarController.viewControllers = [firstNavVC, secondNavVC]
+        let thirdVC = RandomLocationViewController()
+        let thirdNavVC = UINavigationController(rootViewController: thirdVC)
+        thirdNavVC.tabBarItem = UITabBarItem(title: "Get random", image: UIImage(systemName: "shuffle"), tag: 2)
+
+        tabBarController.viewControllers = [firstNavVC, secondNavVC, thirdNavVC]
 
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
@@ -25,3 +29,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 }
+

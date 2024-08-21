@@ -13,7 +13,7 @@ class SearchLocationViewController: UIViewController, CommonComponents {
     let searchScreenView = UIView()
     let titleLabelLocationSearch = UILabel()
     var locationTextField = UITextField()
-    let locationSeeekButton = UIButton()
+    let locationSeekButton = UIButton()
     let forecastTableView = UITableView()
 
     // Флаг для контроля необходимости показа модального окна
@@ -32,11 +32,6 @@ class SearchLocationViewController: UIViewController, CommonComponents {
 
     var resultCities: [Location] = [] {
         didSet {
-            guard !resultCities.isEmpty else {
-                print("resultCities is empty")
-                return
-            }
-
             switch resultCities.count {
             case 0:
                 showAlert(title: "ForecaDB search error", message: "No locations found in DB for \(chosenLocation). Try to change location name (choose another)")
@@ -84,9 +79,9 @@ class SearchLocationViewController: UIViewController, CommonComponents {
 
         configureForecastTableView(searchScreenView: searchScreenView)
 
-        locationSeeekButton.addTarget(self, action: #selector(handleSearchButtonTapped), for: .touchUpInside)
-        locationSeeekButton.addTarget(self, action: #selector(buttonTouchDown), for: [.touchDown, .touchDragEnter])
-        locationSeeekButton.addTarget(self, action: #selector(buttonTouchUp), for: [.touchUpInside, .touchCancel, .touchDragExit])
+        locationSeekButton.addTarget(self, action: #selector(handleSearchButtonTapped), for: .touchUpInside)
+        locationSeekButton.addTarget(self, action: #selector(buttonTouchDown), for: [.touchDown, .touchDragEnter])
+        locationSeekButton.addTarget(self, action: #selector(buttonTouchUp), for: [.touchUpInside, .touchCancel, .touchDragExit])
     }
 
     @objc private func handleSearchButtonTapped() {
@@ -108,12 +103,12 @@ class SearchLocationViewController: UIViewController, CommonComponents {
 
     private func animateButtonPress(isPressed: Bool) {
         UIView.animate(withDuration: 0.1) {
-            self.locationSeeekButton.transform = isPressed ? CGAffineTransform(scaleX: 0.95, y: 0.95) : .identity
-            self.locationSeeekButton.backgroundColor = isPressed ? .systemBlue.withAlphaComponent(0.8) : .systemBlue
+            self.locationSeekButton.transform = isPressed ? CGAffineTransform(scaleX: 0.95, y: 0.95) : .identity
+            self.locationSeekButton.backgroundColor = isPressed ? .systemBlue.withAlphaComponent(0.8) : .systemBlue
         }
     }
 
-    // Метод для отображения модального экрана с выбором локации
+    // Метод для отображения модального экрана с выбором локации если у нас несколько совпадений по названию локи
     private func presentLocationSelectionModal() {
         let locationSelectionVC = LocationSelectionViewController()
         locationSelectionVC.locations = resultCities
@@ -129,7 +124,7 @@ class SearchLocationViewController: UIViewController, CommonComponents {
         searchScreenView.addSubview(forecastTableView)
 
         forecastTableView.addAndActivateConstraints(to: [
-            .top(20, relativeTo: locationSeeekButton.bottomAnchor),
+            .top(20, relativeTo: locationSeekButton.bottomAnchor),
             .leading(20),
             .trailing(-20),
             .bottom(0, relativeTo: searchScreenView.bottomAnchor)
@@ -189,18 +184,18 @@ extension SearchLocationViewController {
     }
 
     private func configureSearchButton(searchScreenView: UIView) {
-        locationSeeekButton.setTitle("Get forecast for location", for: .normal)
-        locationSeeekButton.setTitleColor(.white, for: .normal)
-        locationSeeekButton.backgroundColor = .systemBlue
-        locationSeeekButton.layer.cornerRadius = 8 // Закругление углов
+        locationSeekButton.setTitle("Get forecast for location", for: .normal)
+        locationSeekButton.setTitleColor(.white, for: .normal)
+        locationSeekButton.backgroundColor = .systemBlue
+        locationSeekButton.layer.cornerRadius = 8 // Закругление углов
 
-        searchScreenView.addSubview(locationSeeekButton)
+        searchScreenView.addSubview(locationSeekButton)
 
-        locationSeeekButton.addAndActivateConstraints(to: [
+        locationSeekButton.addAndActivateConstraints(to: [
             .top(20, relativeTo: locationTextField.bottomAnchor),
             .leading(20),
             .trailing(-20),
-            .height(30) // Установка высоты кнопки
+            .height(30)
         ], of: searchScreenView)
     }
 }

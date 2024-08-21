@@ -10,8 +10,8 @@ final class ApiHandlerForeca {
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
 
-    private let apiUser = "metallfun"
-    private let apiP = "LySTATsE3wHD"
+    private let apiUser = "adept-media-studio"
+    private let apiP = "NMTGEVPhwnjw"
 
     private(set) var authToken: String?
 
